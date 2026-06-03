@@ -1,0 +1,163 @@
+"use client";
+
+import { useState } from "react";
+import { Bell, BellOff, Download, Upload, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Modal } from "@/components/ui/Modal";
+import { Input, Label } from "@/components/ui/Input";
+import { useData } from "@/components/providers/DataProvider";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { requestNotificationPermission } from "@/lib/notifications";
+import { exportData, importData } from "@/lib/storage";
+
+export function SettingsPanel() {
+  const { data, setSettings, resetAll } = useData();
+  const { theme, setTheme } = useTheme();
+  const [importOpen, setImportOpen] = useState(false);
+  const [importText, setImportText] = useState("");
+
+  const handleNotif = async () => {
+    if (data.settings.notificationsEnabled) {
+      setSettings({ notificationsEnabled: false });
+      return;
+    }
+    const ok = await requestNotificationPermission();
+    setSettings({ notificationsEnabled: ok });
+  };
+
+  const handleExport = () => {
+    const json = exportData(data);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `atelier-planner-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = () => {
+    const parsed = importData(importText);
+    if (!parsed) {
+      alert("Invalid JSON");
+      return;
+    }
+    if (confirm("This will replace all current data. Continue?")) {
+      window.localStorage.setItem("atelier-planner-v1", importText);
+      window.location.reload();
+    }
+  };
+
+  return (
+    <>
+      <Card>
+        <h3 className="font-serif text-lg italic mb-4">Preferences</h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm font-medium">Theme</div>
+              <div className="text-xs text-[var(--fg-soft)]">Light or dark interface</div>
+            </div>
+            <div className="flex rounded-md border p-0.5" style={{ borderColor: "var(--border-soft)" }}>
+              {(["light", "dark"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTheme(t)}
+                  className={`px-3 h-8 text-xs font-medium rounded capitalize ${
+                    theme === t ? "bg-[var(--accent)] text-cream-50" : "text-[var(--fg-soft)]"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm font-medium">Notifications</div>
+              <div className="text-xs text-[var(--fg-soft)]">
+                {data.settings.notificationsEnabled ? "Enabled" : "Off"}
+              </div>
+            </div>
+            <Button size="sm" variant="secondary" onClick={handleNotif}>
+              {data.settings.notificationsEnabled ? (
+                <>
+                  <BellOff className="h-3.5 w-3.5" /> Disable
+                </>
+              ) : (
+                <>
+                  <Bell className="h-3.5 w-3.5" /> Enable
+                </>
+              )}
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm font-medium">Sound</div>
+              <div className="text-xs text-[var(--fg-soft)]">Chime at end of focus sessions</div>
+            </div>
+            <label className="relative inline-flex h-6 w-11 cursor-pointer items-center">
+              <input
+                type="checkbox"
+                className="peer sr-only"
+                checked={data.settings.soundEnabled}
+                onChange={(e) => setSettings({ soundEnabled: e.target.checked })}
+              />
+              <span
+                className="absolute inset-0 rounded-full transition-colors"
+                style={{ background: data.settings.soundEnabled ? "var(--accent)" : "var(--border)" }}
+              />
+              <span
+                className="absolute h-4 w-4 rounded-full bg-cream-50 transition-transform"
+                style={{ transform: data.settings.soundEnabled ? "translateX(24px)" : "translateX(4px)" }}
+              />
+            </label>
+          </div>
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="font-serif text-lg italic mb-4">Data</h3>
+        <div className="grid sm:grid-cols-3 gap-2">
+          <Button variant="secondary" onClick={handleExport}>
+            <Download className="h-3.5 w-3.5" /> Export
+          </Button>
+          <Button variant="secondary" onClick={() => setImportOpen(true)}>
+            <Upload className="h-3.5 w-3.5" /> Import
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (confirm("Erase all data? This cannot be undone.")) {
+                resetAll();
+              }
+            }}
+          >
+            <Trash2 className="h-3.5 w-3.5" /> Reset
+          </Button>
+        </div>
+      </Card>
+
+      <Modal open={importOpen} onClose={() => setImportOpen(false)} title="Import Data" size="md">
+        <div className="space-y-3">
+          <Label>Paste your exported JSON</Label>
+          <textarea
+            value={importText}
+            onChange={(e) => setImportText(e.target.value)}
+            rows={8}
+            className="w-full rounded-md border bg-transparent p-3 text-xs font-mono"
+            style={{ borderColor: "var(--border)" }}
+            placeholder='{"tasks":[],"habits":[],...}'
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setImportOpen(false)}>Cancel</Button>
+            <Button variant="primary" onClick={handleImport}>Replace Data</Button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
