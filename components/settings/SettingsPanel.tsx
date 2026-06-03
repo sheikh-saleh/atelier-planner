@@ -1,19 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, BellOff, Download, Upload, Trash2 } from "lucide-react";
+import { Bell, BellOff, Download, Upload, Trash2, LogIn, LogOut, RefreshCw } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Modal } from "@/components/ui/Modal";
 import { Input, Label } from "@/components/ui/Input";
 import { useData } from "@/components/providers/DataProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { useAuth } from "@/components/providers/AuthProvider";
 import { requestNotificationPermission } from "@/lib/notifications";
 import { exportData, importData } from "@/lib/storage";
 
 export function SettingsPanel() {
-  const { data, setSettings, resetAll } = useData();
+  const { data, setSettings, resetAll, syncing } = useData();
   const { theme, setTheme } = useTheme();
+  const { user, signOut } = useAuth();
   const [importOpen, setImportOpen] = useState(false);
   const [importText, setImportText] = useState("");
 
@@ -51,6 +54,37 @@ export function SettingsPanel() {
 
   return (
     <>
+      <Card>
+        <h3 className="font-serif text-lg italic mb-4">Account</h3>
+        {user ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium">{user.email}</div>
+                <div className="text-xs text-[var(--fg-soft)]">
+                  {syncing ? "Syncing…" : "Synced to cloud"}
+                </div>
+              </div>
+              {syncing && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[var(--accent)]" />}
+            </div>
+            <Button variant="secondary" onClick={() => signOut()} className="w-full">
+              <LogOut className="h-3.5 w-3.5" /> Sign out
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-xs text-[var(--fg-soft)]">
+              Sign in to sync your data across devices.
+            </p>
+            <Link href="/auth">
+              <Button variant="primary" className="w-full">
+                <LogIn className="h-3.5 w-3.5" /> Sign in
+              </Button>
+            </Link>
+          </div>
+        )}
+      </Card>
+
       <Card>
         <h3 className="font-serif text-lg italic mb-4">Preferences</h3>
         <div className="space-y-3">

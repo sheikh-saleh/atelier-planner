@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
   { href: "/", label: "Today", icon: Home },
@@ -16,6 +17,7 @@ const items = [
 
 export function MobileNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
   return (
     <nav
       className="lg:hidden fixed bottom-0 left-0 right-0 z-30 border-t bg-[var(--bg-card)]/95 backdrop-blur"
@@ -25,6 +27,7 @@ export function MobileNav() {
         {items.map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           const Icon = item.icon;
+          const showDot = item.href === "/settings" && !user;
           return (
             <li key={item.href} className="flex-1">
               <Link
@@ -34,7 +37,12 @@ export function MobileNav() {
                   active ? "text-[var(--accent)]" : "text-[var(--fg-soft)]",
                 )}
               >
-                <Icon className="h-5 w-5" strokeWidth={active ? 2 : 1.5} />
+                <span className="relative">
+                  <Icon className="h-5 w-5" strokeWidth={active ? 2 : 1.5} />
+                  {showDot && (
+                    <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+                  )}
+                </span>
                 <span>{item.label}</span>
               </Link>
             </li>

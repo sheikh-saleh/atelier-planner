@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
+import { Calendar, CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
   { href: "/", label: "Today", icon: Home },
@@ -16,6 +17,7 @@ const items = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-r" style={{ borderColor: "var(--border-soft)" }}>
       <div className="flex flex-col h-full px-5 py-8">
@@ -55,6 +57,25 @@ export function Sidebar() {
           <p className="font-serif text-[11px] italic text-[var(--fg-muted)] leading-relaxed">
             &ldquo;Discipline equals freedom.&rdquo;
           </p>
+          {user ? (
+            <Link
+              href="/settings"
+              className="mt-3 flex items-center gap-2 text-xs text-[var(--fg-soft)] hover:text-[var(--fg)] transition-colors"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-cream-200 text-[10px] font-medium dark:bg-ink-400">
+                {user.email?.[0]?.toUpperCase() ?? <User className="h-3 w-3" />}
+              </span>
+              <span className="truncate font-serif">{user.email}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/auth"
+              className="mt-3 flex items-center gap-2 text-xs text-[var(--fg-soft)] hover:text-[var(--fg)] transition-colors"
+            >
+              <User className="h-3.5 w-3.5" />
+              <span className="font-serif">Sign in</span>
+            </Link>
+          )}
         </div>
       </div>
     </aside>

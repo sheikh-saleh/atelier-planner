@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { AppShell } from "@/components/layout/AppShell";
 import { DataProvider } from "@/components/providers/DataProvider";
+import { AppShell } from "@/components/layout/AppShell";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -63,11 +64,13 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="font-sans antialiased">
-        <DataProvider>
-          <ThemeProvider>
-            <AppShell>{children}</AppShell>
-          </ThemeProvider>
-        </DataProvider>
+        <AuthProvider>
+          <DataProvider>
+            <ThemeProvider>
+              <AppShell>{children}</AppShell>
+            </ThemeProvider>
+          </DataProvider>
+        </AuthProvider>
       </body>
     </html>
   );
