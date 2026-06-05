@@ -153,16 +153,16 @@ export function PomodoroTimer() {
   const focusMinutes = todaySessions.filter((p) => p.type === "focus").reduce((acc, s) => acc + s.durationMin, 0);
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
+    <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-6">
       <Card className="lg:col-span-2" paper>
-        <div className="flex flex-col items-center py-6">
-          <div className="flex items-center gap-1.5 mb-1">
+        <div className="flex flex-col items-center py-4 sm:py-6">
+          <div className="flex items-center gap-1 sm:gap-1.5 mb-1">
             {(["focus", "short", "long"] as PomodoroType[]).map((t) => (
               <button
                 key={t}
                 onClick={() => switchType(t)}
                 className={cn(
-                  "px-3 h-8 text-[11px] uppercase tracking-wider rounded-full font-medium transition-colors",
+                  "px-2.5 sm:px-3 h-7 sm:h-8 text-[10px] sm:text-[11px] uppercase tracking-wider rounded-full font-medium transition-colors",
                   type === t
                     ? "bg-[var(--bg-card)] border border-[var(--accent)] text-[var(--fg)]"
                     : "text-[var(--fg-soft)] hover:text-[var(--fg)]",
@@ -172,46 +172,49 @@ export function PomodoroTimer() {
               </button>
             ))}
           </div>
-          <p className="font-serif text-sm italic text-[var(--fg-soft)] mb-6">{cfg.sub}</p>
+          <p className="font-serif text-xs sm:text-sm italic text-[var(--fg-soft)] mb-4 sm:mb-6">{cfg.sub}</p>
 
-          <ProgressRing
-            value={progress}
-            size={300}
-            stroke={6}
-            fillColor={cfg.color}
-            trackColor="var(--border-soft)"
-            label={
-              <div className="text-center">
-                <div className="font-display tnum text-7xl sm:text-8xl tracking-tighter leading-none" style={{ color: "var(--fg)" }}>
-                  {secondsToClock(secondsLeft)}
+          <div className="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[300px] lg:h-[300px]">
+            <ProgressRing
+              value={progress}
+              size={300}
+              stroke={6}
+              fillColor={cfg.color}
+              trackColor="var(--border-soft)"
+              className="!w-full !h-full"
+              label={
+                <div className="text-center">
+                  <div className="font-display tnum text-6xl sm:text-7xl lg:text-8xl tracking-tighter leading-none" style={{ color: "var(--fg)" }}>
+                    {secondsToClock(secondsLeft)}
+                  </div>
+                  <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-[var(--fg-muted)]">
+                    {type === "focus"
+                      ? `Cycle ${(cyclesCompleted % cyclesUntilLong) + 1} of ${cyclesUntilLong}`
+                      : cyclesCompleted % cyclesUntilLong === 0
+                        ? "Long break"
+                        : "Short break"}
+                  </div>
                 </div>
-                <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-[var(--fg-muted)]">
-                  {type === "focus"
-                    ? `Cycle ${(cyclesCompleted % cyclesUntilLong) + 1} of ${cyclesUntilLong}`
-                    : cyclesCompleted % cyclesUntilLong === 0
-                      ? "Long break"
-                      : "Short break"}
-                </div>
-              </div>
-            }
-          />
+              }
+            />
+          </div>
 
-          <div className="mt-8 flex items-center gap-3">
-            <Button onClick={handleReset} size="md" variant="ghost" aria-label="Reset">
+          <div className="mt-6 sm:mt-8 flex items-center gap-2 sm:gap-3">
+            <Button onClick={handleReset} size="sm" variant="ghost" aria-label="Reset">
               <RotateCcw className="h-4 w-4" />
             </Button>
             {running ? (
-              <Button onClick={handlePause} size="lg" variant="primary" className="px-8">
+              <Button onClick={handlePause} size="md" variant="primary" className="px-6 sm:px-8">
                 <Pause className="h-4 w-4" />
                 Pause
               </Button>
             ) : (
-              <Button onClick={handleStart} size="lg" variant="primary" className="px-8">
+              <Button onClick={handleStart} size="md" variant="primary" className="px-6 sm:px-8">
                 <Play className="h-4 w-4" />
                 {secondsLeft === totalSec ? "Begin" : "Resume"}
               </Button>
             )}
-            <Button onClick={handleSkip} size="md" variant="ghost" aria-label="Skip">
+            <Button onClick={handleSkip} size="sm" variant="ghost" aria-label="Skip">
               <SkipForward className="h-4 w-4" />
             </Button>
           </div>
@@ -219,13 +222,13 @@ export function PomodoroTimer() {
         </div>
       </Card>
 
-      <div className="space-y-4">
+      <div className="space-y-4 lg:space-y-4">
         <Card>
           <div className="font-serif text-[11px] uppercase tracking-[0.25em] text-[var(--fg-soft)] mb-2">
             Today
           </div>
           <div className="flex items-baseline gap-2">
-            <div className="font-display tnum text-4xl" style={{ color: "var(--fg)" }}>
+            <div className="font-display tnum text-3xl sm:text-4xl" style={{ color: "var(--fg)" }}>
               {focusMinutes}
             </div>
             <div className="text-sm text-[var(--fg-soft)]">focus minutes</div>
