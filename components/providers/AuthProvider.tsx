@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 
@@ -19,27 +19,39 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
+
+    const finish = () => {
+      if (mountedRef.current) setLoading(false);
+    };
+
+    // Safety: always stop loading after 5 seconds no matter what
+    const safetyTimer = setTimeout(finish, 5000);
+
     supabase.auth
       .getSession()
       .then(({ data: { session: s } }) => {
-        setSession(s);
+        if (mountedRef.current) setSession(s);
       })
       .catch(() => {
-        setSession(null);
+        if (mountedRef.current) setSession(null);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(finish);
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
+      if (mountedRef.current) setSession(s);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mountedRef.current = false;
+      clearTimeout(safetyTimer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
@@ -58,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    setSession(null);
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {

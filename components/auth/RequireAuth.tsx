@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { AppShell } from "@/components/layout/AppShell";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -10,20 +11,22 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
 
+  const isAuthPage = pathname === "/auth";
+
   useEffect(() => {
     if (loading) return;
 
-    if (!user && pathname !== "/auth") {
+    if (!user && !isAuthPage) {
       router.replace("/auth");
       return;
     }
 
     setReady(true);
-  }, [user, loading, pathname, router]);
+  }, [user, loading, isAuthPage, router]);
 
   if (loading || !ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
         <p className="font-serif text-sm italic" style={{ color: "var(--fg-muted)" }}>
           Loading…
         </p>
@@ -31,5 +34,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  if (isAuthPage) return <>{children}</>;
+
+  return <AppShell>{children}</AppShell>;
 }

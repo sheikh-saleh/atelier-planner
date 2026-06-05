@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
@@ -30,6 +30,28 @@ export const metadata: Metadata = {
   title: "Atelier — Daily Routine Planner",
   description:
     "A classical, minimal daily routine planner with habit tracking, Pomodoro focus, and journaling.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Atelier",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "mobile-web-app-capable": "yes",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#2C2A26",
 };
 
 const themeScript = `
@@ -62,6 +84,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="font-sans antialiased">
@@ -69,7 +92,7 @@ export default function RootLayout({
           <DataProvider>
             <ThemeProvider>
               <RequireAuth>
-                <AppShell>{children}</AppShell>
+                {children}
               </RequireAuth>
             </ThemeProvider>
           </DataProvider>

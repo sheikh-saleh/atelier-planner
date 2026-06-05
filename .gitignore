@@ -6,3 +6,11 @@ dist
 .DS_Store
 *.log
 next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Serwist build output (generated at build time)
+public/sw.js
+public/swe-worker-*.js
+
+# Dev scripts
+scripts/
