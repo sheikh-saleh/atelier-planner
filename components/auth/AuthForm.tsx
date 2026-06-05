@@ -29,12 +29,17 @@ export function AuthForm() {
         const res = await signIn(email, password);
         if (res.error) setError(res.error);
       } else if (mode === "signup") {
+        if (!name.trim()) {
+          setError("Name is required");
+          setLoading(false);
+          return;
+        }
         if (password.length < 6) {
           setError("Password must be at least 6 characters");
           setLoading(false);
           return;
         }
-        const res = await signUp(email, password, name || undefined);
+        const res = await signUp(email, password, name.trim());
         if (res.error) setError(res.error);
         else setSuccess("Check your email for a confirmation link.");
       } else {
@@ -76,6 +81,7 @@ export function AuthForm() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your display name"
                 autoComplete="name"
+                required
               />
             </div>
           )}

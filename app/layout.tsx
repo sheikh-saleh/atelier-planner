@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { DataProvider } from "@/components/providers/DataProvider";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 import { AppShell } from "@/components/layout/AppShell";
 
 const playfair = Playfair_Display({
@@ -67,7 +68,9 @@ export default function RootLayout({
         <AuthProvider>
           <DataProvider>
             <ThemeProvider>
-              <AppShell>{children}</AppShell>
+              <RequireAuth>
+                <AppShell>{children}</AppShell>
+              </RequireAuth>
             </ThemeProvider>
           </DataProvider>
         </AuthProvider>
