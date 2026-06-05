@@ -12,10 +12,10 @@ import { secondsToClock, todayISO } from "@/lib/dateUtils";
 import { useHydrated } from "@/hooks/useHydrated";
 import { cn } from "@/lib/utils";
 
-const labels: Record<PomodoroType, { title: string; sub: string; color: string }> = {
-  focus: { title: "Focus", sub: "Deep work", color: "var(--burgundy-400)" },
-  short: { title: "Short Break", sub: "Rest briefly", color: "var(--sage-500)" },
-  long: { title: "Long Break", sub: "Step away", color: "var(--blue-dusty-500)" },
+const labels: Record<PomodoroType, { title: string; shortLabel: string; sub: string; color: string }> = {
+  focus: { title: "Focus", shortLabel: "Focus", sub: "Deep work", color: "var(--burgundy-400)" },
+  short: { title: "Short Break", shortLabel: "Short", sub: "Rest briefly", color: "var(--sage-500)" },
+  long: { title: "Long Break", shortLabel: "Long", sub: "Step away", color: "var(--blue-dusty-500)" },
 };
 
 export function PomodoroTimer() {
@@ -162,29 +162,29 @@ export function PomodoroTimer() {
                 key={t}
                 onClick={() => switchType(t)}
                 className={cn(
-                  "px-2.5 sm:px-3 h-7 sm:h-8 text-[10px] sm:text-[11px] uppercase tracking-wider rounded-full font-medium transition-colors",
+                  "px-2.5 sm:px-3 h-7 sm:h-8 text-[10px] sm:text-[11px] uppercase tracking-wider rounded-full font-medium transition-colors whitespace-nowrap",
                   type === t
                     ? "bg-[var(--bg-card)] border border-[var(--accent)] text-[var(--fg)]"
                     : "text-[var(--fg-soft)] hover:text-[var(--fg)]",
                 )}
               >
-                {labels[t].title}
+                <span className="sm:hidden">{labels[t].shortLabel}</span>
+                <span className="hidden sm:inline">{labels[t].title}</span>
               </button>
             ))}
           </div>
           <p className="font-serif text-xs sm:text-sm italic text-[var(--fg-soft)] mb-4 sm:mb-6">{cfg.sub}</p>
 
-          <div className="relative w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[300px] lg:h-[300px]">
+          <div className="w-52 h-52 sm:w-60 sm:h-60 lg:w-72 lg:h-72">
             <ProgressRing
               value={progress}
               size={300}
               stroke={6}
               fillColor={cfg.color}
               trackColor="var(--border-soft)"
-              className="!w-full !h-full"
               label={
                 <div className="text-center">
-                  <div className="font-display tnum text-6xl sm:text-7xl lg:text-8xl tracking-tighter leading-none" style={{ color: "var(--fg)" }}>
+                  <div className="font-display tnum text-5xl sm:text-6xl lg:text-7xl tracking-tighter leading-none" style={{ color: "var(--fg)" }}>
                     {secondsToClock(secondsLeft)}
                   </div>
                   <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-[var(--fg-muted)]">

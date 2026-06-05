@@ -25,8 +25,12 @@ export function ProgressRing({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (Math.max(0, Math.min(100, value)) / 100) * circumference;
   return (
-    <div className={cn("relative inline-flex items-center justify-center", className)} style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
+    <div className={cn("relative inline-flex w-full h-full items-center justify-center", className)}>
+      <svg
+        viewBox={`0 0 ${size} ${size}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="-rotate-90 w-full h-full overflow-visible"
+      >
         <circle
           cx={size / 2}
           cy={size / 2}
