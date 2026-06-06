@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
-  { href: "/", label: "Today", icon: Home },
-  { href: "/habits", label: "Habits", icon: CheckSquare },
-  { href: "/timer", label: "Pomodoro", icon: Timer },
-  { href: "/journal", label: "Journal", icon: PenLine },
-  { href: "/stats", label: "Insights", icon: LineChart },
-  { href: "/settings", label: "Settings", icon: SettingsIcon },
+  { href: "/app", label: "Today", icon: Home },
+  { href: "/app/habits", label: "Habits", icon: CheckSquare },
+  { href: "/app/timer", label: "Pomodoro", icon: Timer },
+  { href: "/app/journal", label: "Journal", icon: PenLine },
+  { href: "/app/stats", label: "Insights", icon: LineChart },
+  { href: "/app/settings", label: "Settings", icon: SettingsIcon },
 ];
 
 export function Sidebar() {
@@ -21,7 +21,7 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-r" style={{ borderColor: "var(--border-soft)" }}>
       <div className="flex flex-col h-full px-5 py-8">
-        <Link href="/" className="block mb-10">
+        <Link href="/app" className="block mb-10">
           <div className="font-display text-3xl italic tracking-wide" style={{ color: "var(--fg)" }}>
             Atelier
           </div>
@@ -32,7 +32,7 @@ export function Sidebar() {
 
         <nav className="flex-1 space-y-1">
           {items.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -59,7 +59,7 @@ export function Sidebar() {
           </p>
           {user ? (
             <Link
-              href="/settings"
+              href="/app/settings"
               className="mt-3 flex items-center gap-2 text-xs text-[var(--fg-soft)] hover:text-[var(--fg)] transition-colors"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-cream-200 text-[10px] font-medium dark:bg-ink-400">

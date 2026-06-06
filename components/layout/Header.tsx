@@ -42,7 +42,7 @@ export function Header({ title, subtitle, action, showDate = true }: HeaderProps
 
 export function Brand({ small = false }: { small?: boolean }) {
   return (
-    <Link href="/" className="lg:hidden block">
+    <Link href="/app" className="lg:hidden block">
       <div className={small ? "font-display text-xl italic" : "font-display text-2xl italic"} style={{ color: "var(--fg)" }}>
         Atelier
       </div>

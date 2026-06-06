@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
-  { href: "/", label: "Today", icon: Home },
-  { href: "/habits", label: "Habits", icon: CheckSquare },
-  { href: "/timer", label: "Focus", icon: Timer },
-  { href: "/journal", label: "Journal", icon: PenLine },
-  { href: "/stats", label: "Stats", icon: LineChart },
-  { href: "/settings", label: "More", icon: SettingsIcon },
+  { href: "/app", label: "Today", icon: Home },
+  { href: "/app/habits", label: "Habits", icon: CheckSquare },
+  { href: "/app/timer", label: "Focus", icon: Timer },
+  { href: "/app/journal", label: "Journal", icon: PenLine },
+  { href: "/app/stats", label: "Stats", icon: LineChart },
+  { href: "/app/settings", label: "More", icon: SettingsIcon },
 ];
 
 export function MobileNav() {
@@ -25,9 +25,9 @@ export function MobileNav() {
     >
       <ul className="flex items-stretch justify-around px-1 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
         {items.map((item) => {
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active = item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href);
           const Icon = item.icon;
-          const showDot = item.href === "/settings" && !user;
+          const showDot = item.href === "/app/settings" && !user;
           return (
             <li key={item.href} className="flex-1">
               <Link

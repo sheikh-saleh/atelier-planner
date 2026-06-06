@@ -11,7 +11,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/");
+      router.replace("/app");
     }
   }, [user, loading, router]);
 
