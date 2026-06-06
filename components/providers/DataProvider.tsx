@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { AppData, Habit, JournalEntry, JournalMoodUpdate, PomodoroConfig, PomodoroSession, Settings, Task } from "@/lib/types";
 import { defaultData, defaultSettings, loadData, saveData } from "@/lib/storage";
+import { buildSeedData, clearSeedFlag, isSeedRequested } from "@/lib/seed";
 import { uid } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 import {
@@ -51,11 +52,16 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const userIdRef = useRef<string | null>(null);
   const didPullRef = useRef(false);
 
-  // ── Hydrate from localStorage on mount ──
+  // ── Hydrate from localStorage on mount (or seed demo data if flagged) ──
   useEffect(() => {
-    setData(loadData());
+    if (!user && isSeedRequested()) {
+      setData(buildSeedData());
+      clearSeedFlag();
+    } else {
+      setData(loadData());
+    }
     setHydrated(true);
-  }, []);
+  }, [user]);
 
   // ── Save to localStorage on every change ──
   useEffect(() => {
