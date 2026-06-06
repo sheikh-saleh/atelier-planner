@@ -31,38 +31,50 @@ export function TodayProgress() {
 
   return (
     <Card>
-      <h3 className="font-serif text-lg italic mb-4">Today at a Glance</h3>
-      <div className="grid grid-cols-3 gap-3">
+      <h3 className="font-serif text-lg italic mb-4 lg:mb-2 lg:text-base">Today at a Glance</h3>
+      <div className="grid grid-cols-3 gap-3 lg:gap-2">
         <div className="flex flex-col items-center">
-          <ProgressRing
-            value={stats.taskRate}
-            size={84}
-            stroke={6}
-            fillColor="var(--blue-dusty-500)"
-            label={
-              <div className="text-center">
-                <div className="font-display tnum text-xl">{stats.taskRate}<span className="text-xs">%</span></div>
-              </div>
-            }
-          />
+          <div className="w-[84px] h-[84px] lg:w-16 lg:h-16">
+            <ProgressRing
+              value={stats.taskRate}
+              size={84}
+              stroke={6}
+              fillColor="var(--blue-dusty-500)"
+              label={
+                <div className="text-center">
+                  <div className="font-display tnum text-xl lg:text-base">
+                    {stats.taskRate}
+                    <span className="text-xs lg:text-[10px]">%</span>
+                  </div>
+                </div>
+              }
+            />
+          </div>
           <div className="mt-1.5 text-[10px] uppercase tracking-wider text-[var(--fg-soft)]">Tasks</div>
         </div>
         <div className="flex flex-col items-center">
-          <ProgressRing
-            value={stats.habitRate}
-            size={84}
-            stroke={6}
-            fillColor="var(--sage-500)"
-            label={
-              <div className="text-center">
-                <div className="font-display tnum text-xl">{stats.habitRate}<span className="text-xs">%</span></div>
-              </div>
-            }
-          />
+          <div className="w-[84px] h-[84px] lg:w-16 lg:h-16">
+            <ProgressRing
+              value={stats.habitRate}
+              size={84}
+              stroke={6}
+              fillColor="var(--sage-500)"
+              label={
+                <div className="text-center">
+                  <div className="font-display tnum text-xl lg:text-base">
+                    {stats.habitRate}
+                    <span className="text-xs lg:text-[10px]">%</span>
+                  </div>
+                </div>
+              }
+            />
+          </div>
           <div className="mt-1.5 text-[10px] uppercase tracking-wider text-[var(--fg-soft)]">Habits</div>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="font-display tnum text-3xl" style={{ color: "var(--fg)" }}>{stats.focusMin}</div>
+          <div className="font-display tnum text-3xl lg:text-xl" style={{ color: "var(--fg)" }}>
+            {stats.focusMin}
+          </div>
           <div className="mt-1.5 text-[10px] uppercase tracking-wider text-[var(--fg-soft)]">Focus min</div>
         </div>
       </div>
