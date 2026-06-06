@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Input, Label, Select } from "@/components/ui/Input";
+import { Input, Label } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { useData } from "@/components/providers/DataProvider";
 import type { Frequency, Habit } from "@/lib/types";
 import { colorMap } from "@/lib/utils";
@@ -143,12 +144,16 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
 
         <div className="space-y-1.5">
           <Label>Frequency</Label>
-          <Select value={frequency} onChange={(e) => setFrequency(e.target.value as Frequency)}>
-            <option value="daily">Every day</option>
-            <option value="weekdays">Weekdays only</option>
-            <option value="weekends">Weekends only</option>
-            <option value="custom">Custom days</option>
-          </Select>
+          <Select
+            value={frequency}
+            onChange={(v) => setFrequency(v as Frequency)}
+            options={[
+              { value: "daily", label: "Every day" },
+              { value: "weekdays", label: "Weekdays only" },
+              { value: "weekends", label: "Weekends only" },
+              { value: "custom", label: "Custom days" },
+            ]}
+          />
         </div>
 
         {frequency === "custom" && (

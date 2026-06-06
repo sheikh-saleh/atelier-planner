@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { Input, Label, Select, Textarea } from "@/components/ui/Input";
+import { Input, Label, Textarea } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { useData } from "@/components/providers/DataProvider";
 import type { Category, Task } from "@/lib/types";
 import { todayISO } from "@/lib/dateUtils";
@@ -131,14 +132,9 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
             <Select
               id="task-category"
               value={category}
-              onChange={(e) => setCategory(e.target.value as Category)}
-            >
-              {Object.entries(categoryMap).map(([k, v]) => (
-                <option key={k} value={k}>
-                  {v.label}
-                </option>
-              ))}
-            </Select>
+              onChange={(v) => setCategory(v as Category)}
+              options={Object.entries(categoryMap).map(([k, v]) => ({ value: k, label: v.label }))}
+            />
           </div>
         </div>
 
