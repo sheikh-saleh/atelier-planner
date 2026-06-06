@@ -21,9 +21,11 @@ interface SelectProps {
 export function Select({ id, value, onChange, options, className, placeholder }: SelectProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const selected = options.find((o) => o.value === value);
 
+  // Close on click outside or Escape
   useEffect(() => {
     if (!open) return;
     const onClickOutside = (e: MouseEvent) => {
@@ -40,6 +42,15 @@ export function Select({ id, value, onChange, options, className, placeholder }:
       document.removeEventListener("mousedown", onClickOutside);
       document.removeEventListener("keydown", onKey);
     };
+  }, [open]);
+
+  // Scroll selected option into view when opened
+  useEffect(() => {
+    if (!open || !listRef.current) return;
+    const selectedEl = listRef.current.querySelector('[aria-selected="true"]');
+    if (selectedEl && "scrollIntoView" in selectedEl) {
+      (selectedEl as HTMLElement).scrollIntoView({ block: "nearest" });
+    }
   }, [open]);
 
   return (
@@ -69,9 +80,18 @@ export function Select({ id, value, onChange, options, className, placeholder }:
       />
       {open && (
         <ul
+          ref={listRef}
           role="listbox"
-          className="absolute z-50 left-0 right-0 mt-1 max-h-60 overflow-auto rounded-md border bg-[var(--bg-card)] shadow-soft py-1 animate-fade-in"
-          style={{ borderColor: "var(--border-soft)" }}
+          className={cn(
+            "absolute z-50 left-0 right-0 mt-1 overflow-y-auto overscroll-contain rounded-md border bg-[var(--bg-card)] shadow-soft py-1 animate-fade-in",
+            "max-h-[min(15rem,calc(100vh-16rem))]",
+            // Use native scrollbar on desktop, thin custom on mobile
+            "scrollbar-thin",
+          )}
+          style={{
+            borderColor: "var(--border-soft)",
+            WebkitOverflowScrolling: "touch",
+          }}
         >
           {options.map((opt) => {
             const isSelected = opt.value === value;
@@ -85,8 +105,9 @@ export function Select({ id, value, onChange, options, className, placeholder }:
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex items-center justify-between px-3 py-2 text-sm cursor-pointer transition-colors",
+                  "flex items-center justify-between px-3 py-2.5 text-sm cursor-pointer transition-colors",
                   "hover:bg-cream-200 dark:hover:bg-ink-400",
+                  "active:bg-cream-300 dark:active:bg-ink-300",
                   isSelected && "text-[var(--accent)] font-medium",
                 )}
               >
