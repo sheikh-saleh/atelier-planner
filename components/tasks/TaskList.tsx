@@ -81,7 +81,7 @@ export function TaskList({ date, showAdd = true, emptyMessage, filterCompleted }
   return (
     <div>
       {showAdd && (
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 mb-4">
           <div>
             <h2 className="font-serif text-xl italic">Schedule</h2>
             <p className="text-xs text-[var(--fg-soft)] mt-0.5">
@@ -90,9 +90,10 @@ export function TaskList({ date, showAdd = true, emptyMessage, filterCompleted }
                 : `${completedCount} of ${totalCount} complete`}
             </p>
           </div>
-          <Button onClick={() => setFormOpen(true)} size="sm" variant="primary">
+          <Button onClick={() => setFormOpen(true)} size="sm" variant="primary" className="self-start sm:self-auto">
             <Plus className="h-3.5 w-3.5" />
-            New Task
+            <span className="sm:hidden">Add</span>
+            <span className="hidden sm:inline">New Task</span>
           </Button>
         </div>
       )}
