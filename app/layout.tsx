@@ -26,10 +26,34 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Atelier — Daily Routine Planner",
+const SITE_URL =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+  "https://atelier-planner.vercel.app";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Atelier",
+  applicationCategory: "ProductivityApplication",
+  operatingSystem: "Any (PWA)",
   description:
-    "A classical, minimal daily routine planner with habit tracking, Pomodoro focus, and journaling.",
+    "A classical, minimal daily routine planner with habit tracking, Pomodoro focus, and journaling. Free, offline, and privacy-first.",
+  url: SITE_URL,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Atelier — A daily routine planner worth keeping",
+    template: "%s — Atelier",
+  },
+  description:
+    "A classical, minimal daily routine planner with habit tracking, Pomodoro focus, and journaling. Free, offline, and privacy-first.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -38,6 +62,21 @@ export const metadata: Metadata = {
   },
   formatDetection: {
     telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "Atelier",
+    title: "Atelier — A daily routine planner worth keeping",
+    description:
+      "A classical, minimal daily routine planner. Free, offline, and privacy-first.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Atelier — A daily routine planner worth keeping",
+    description:
+      "A classical, minimal daily routine planner. Free, offline, and privacy-first.",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
@@ -86,6 +125,10 @@ export default function RootLayout({
       <head>
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="font-sans antialiased">
         <AuthProvider>
