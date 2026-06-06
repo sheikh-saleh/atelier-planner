@@ -20,6 +20,7 @@ interface SelectProps {
 
 export function Select({ id, value, onChange, options, className, placeholder }: SelectProps) {
   const [open, setOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -42,6 +43,16 @@ export function Select({ id, value, onChange, options, className, placeholder }:
       document.removeEventListener("mousedown", onClickOutside);
       document.removeEventListener("keydown", onKey);
     };
+  }, [open]);
+
+  // Determine if dropdown should open upward based on available space
+  useEffect(() => {
+    if (!open || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    // If less than 200px below, open upward (or if more space above)
+    setOpenUpward(spaceBelow < 200 && spaceAbove > spaceBelow);
   }, [open]);
 
   // Scroll selected option into view when opened
@@ -83,10 +94,10 @@ export function Select({ id, value, onChange, options, className, placeholder }:
           ref={listRef}
           role="listbox"
           className={cn(
-            "absolute z-50 left-0 right-0 mt-1 overflow-y-auto overscroll-contain rounded-md border bg-[var(--bg-card)] shadow-soft py-1 animate-fade-in",
-            "max-h-[min(15rem,calc(100vh-16rem))]",
-            // Use native scrollbar on desktop, thin custom on mobile
+            "absolute z-50 left-0 right-0 rounded-md border bg-[var(--bg-card)] shadow-soft py-1 animate-fade-in",
+            "max-h-[min(14rem,calc(100vh-8rem))] overflow-y-auto overscroll-contain",
             "scrollbar-thin",
+            openUpward ? "bottom-full mb-1" : "top-full mt-1",
           )}
           style={{
             borderColor: "var(--border-soft)",
