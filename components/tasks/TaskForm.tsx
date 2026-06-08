@@ -25,6 +25,7 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
   const [time, setTime] = useState(initial?.time ?? "");
   const [durationMin, setDurationMin] = useState<string>(initial?.durationMin?.toString() ?? "");
   const [category, setCategory] = useState<Category>(initial?.category ?? "personal");
+  const [priority, setPriority] = useState<"low" | "medium" | "high">(initial?.priority ?? "medium");
 
   // Sync state with `initial` prop changes so editing a different task refreshes the form
   useEffect(() => {
@@ -35,6 +36,7 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
     setTime(initial?.time ?? "");
     setDurationMin(initial?.durationMin?.toString() ?? "");
     setCategory(initial?.category ?? "personal");
+    setPriority(initial?.priority ?? "medium");
   }, [initial, defaultDate, open]);
 
   const reset = () => {
@@ -44,6 +46,7 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
     setTime(initial?.time ?? "");
     setDurationMin(initial?.durationMin?.toString() ?? "");
     setCategory(initial?.category ?? "personal");
+    setPriority(initial?.priority ?? "medium");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,6 +59,7 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
       time: time || undefined,
       durationMin: durationMin ? Number(durationMin) : undefined,
       category,
+      priority,
     };
     if (initial) {
       updateTask(initial.id, payload);
@@ -92,7 +96,7 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label htmlFor="task-date">Date</Label>
             <Input
@@ -112,9 +116,6 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
               onChange={(e) => setTime(e.target.value)}
             />
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label htmlFor="task-duration">Duration (min)</Label>
             <Input
@@ -127,6 +128,9 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
               placeholder="30"
             />
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label htmlFor="task-category">Category</Label>
             <Select
@@ -134,6 +138,19 @@ export function TaskForm({ open, onClose, initial, defaultDate }: TaskFormProps)
               value={category}
               onChange={(v) => setCategory(v as Category)}
               options={Object.entries(categoryMap).map(([k, v]) => ({ value: k, label: v.label }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="task-priority">Priority</Label>
+            <Select
+              id="task-priority"
+              value={priority}
+              onChange={(v) => setPriority(v as "low" | "medium" | "high")}
+              options={[
+                { value: "low", label: "Low" },
+                { value: "medium", label: "Medium" },
+                { value: "high", label: "High" },
+              ]}
             />
           </div>
         </div>

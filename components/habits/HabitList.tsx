@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, ArchiveRestore } from "lucide-react";
 import { addMonths, format, subMonths } from "date-fns";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -24,10 +24,10 @@ export function HabitList() {
   const [view, setView] = useState<View>("today");
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
     if (!hydrated) return;
-    // If active habit no longer exists, fall back to first habit (or null)
     if (activeHabitId !== null && !data.habits.some((h) => h.id === activeHabitId)) {
       setActiveHabitId(data.habits.length > 0 ? data.habits[0].id : null);
       return;
@@ -44,17 +44,27 @@ export function HabitList() {
 
   const today = todayISO();
 
+  const activeHabits = useMemo(
+    () => data.habits.filter((h) => !h.isArchived),
+    [data.habits],
+  );
+
+  const archivedHabits = useMemo(
+    () => data.habits.filter((h) => h.isArchived),
+    [data.habits],
+  );
+
   const todayHabits = useMemo(
     () =>
-      data.habits
+      activeHabits
         .filter((h) => isHabitScheduledOn(h, today))
         .sort((a, b) => a.title.localeCompare(b.title)),
-    [data.habits, today],
+    [activeHabits, today],
   );
 
   const completedToday = todayHabits.filter((h) => isHabitCompletedOn(h, today)).length;
 
-  if (data.habits.length === 0 && view === "today") {
+  if (activeHabits.length === 0 && view === "today" && archivedHabits.length === 0) {
     return (
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -138,6 +148,33 @@ export function HabitList() {
               />
             ))
           )}
+
+          {archivedHabits.length > 0 && (
+            <div className="pt-2">
+              <button
+                onClick={() => setShowArchived((v) => !v)}
+                className="flex items-center gap-1.5 text-xs text-[var(--fg-muted)] hover:text-[var(--fg-soft)] transition-colors group"
+              >
+                <ArchiveRestore className="h-3.5 w-3.5 group-hover:text-[var(--accent)] transition-colors" />
+                {showArchived ? "Hide" : "Show"} {archivedHabits.length} archived habit{archivedHabits.length !== 1 ? "s" : ""}
+              </button>
+
+              {showArchived && (
+                <div className="mt-2 space-y-2 animate-[fade-in_0.2s_ease-out]">
+                  {archivedHabits.map((h) => (
+                    <HabitItem
+                      key={h.id}
+                      habit={h}
+                      date={today}
+                      onToggle={toggleHabitOnDate}
+                      onEdit={handleEdit}
+                      onDelete={deleteHabit}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <Card padded={false}>
@@ -163,7 +200,7 @@ export function HabitList() {
 
           <div className="px-5 pt-4">
             <div className="flex flex-wrap gap-1.5 mb-3">
-              {data.habits.map((h) => {
+              {activeHabits.map((h) => {
                 const { current, best } = computeStreak(h);
                 return (
                   <button
@@ -185,7 +222,7 @@ export function HabitList() {
 
           <div className="px-5 pb-5">
             <HabitCalendar
-              habits={activeHabitId ? data.habits.filter((h) => h.id === activeHabitId) : data.habits}
+              habits={activeHabitId ? activeHabits.filter((h) => h.id === activeHabitId) : activeHabits}
               month={calendarMonth}
             />
           </div>

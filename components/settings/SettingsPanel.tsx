@@ -57,20 +57,41 @@ export function SettingsPanel() {
       <Card>
         <h3 className="font-serif text-lg italic mb-4">Account</h3>
         {user ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
+          user.id === "guest-user" ? (
+            <div className="space-y-3">
               <div>
-                <div className="text-sm font-medium">{user.email}</div>
-                <div className="text-xs text-[var(--fg-soft)]">
-                  {syncing ? "Syncing…" : "Synced to cloud"}
+                <div className="text-sm font-medium">Guest Mode (Local Only)</div>
+                <div className="text-xs text-[var(--fg-soft)] mt-0.5">
+                  Your data is saved in this browser. Create an account to sync across devices.
                 </div>
               </div>
-              {syncing && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[var(--accent)]" />}
+              <div className="grid grid-cols-2 gap-2">
+                <Link href="/auth">
+                  <Button variant="primary" className="w-full">
+                    <LogIn className="h-3.5 w-3.5" /> Create Account
+                  </Button>
+                </Link>
+                <Button variant="secondary" onClick={() => signOut()} className="w-full">
+                  <LogOut className="h-3.5 w-3.5" /> Exit Guest
+                </Button>
+              </div>
             </div>
-            <Button variant="secondary" onClick={() => signOut()} className="w-full">
-              <LogOut className="h-3.5 w-3.5" /> Sign out
-            </Button>
-          </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-medium">{user.email}</div>
+                  <div className="text-xs text-[var(--fg-soft)]">
+                    {syncing ? "Syncing…" : "Synced to cloud"}
+                  </div>
+                </div>
+                {syncing && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[var(--accent)]" />}
+              </div>
+              <Button variant="secondary" onClick={() => signOut()} className="w-full">
+                <LogOut className="h-3.5 w-3.5" /> Sign out
+              </Button>
+            </div>
+          )
         ) : (
           <div className="space-y-3">
             <p className="text-xs text-[var(--fg-soft)]">
@@ -150,6 +171,26 @@ export function SettingsPanel() {
               />
             </label>
           </div>
+
+          {data.settings.soundEnabled && (
+            <div className="flex items-center justify-between pl-4 border-l-2 border-[var(--border-soft)] animate-[fade-in_0.2s_ease-out]">
+              <div>
+                <div className="text-sm font-medium">Sound Profile</div>
+                <div className="text-xs text-[var(--fg-soft)]">Select a notification tone</div>
+              </div>
+              <select
+                value={data.settings.soundType ?? "chime"}
+                onChange={(e) => setSettings({ soundType: e.target.value as any })}
+                className="rounded-md border bg-transparent px-2.5 h-8 text-xs font-medium focus:border-[var(--accent)] focus:outline-none"
+                style={{ borderColor: "var(--border)", color: "var(--fg)" }}
+              >
+                <option value="chime" className="bg-[var(--bg-card)]">Chime</option>
+                <option value="bell" className="bg-[var(--bg-card)]">Bell</option>
+                <option value="digital" className="bg-[var(--bg-card)]">Digital</option>
+                <option value="gong" className="bg-[var(--bg-card)]">Gong</option>
+              </select>
+            </div>
+          )}
         </div>
       </Card>
 

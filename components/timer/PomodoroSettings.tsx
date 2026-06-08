@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/Card";
 
 export function PomodoroSettings() {
   const { data, setPomodoroConfig } = useData();
-  const { focusMin, shortMin, longMin, cyclesUntilLong } = data.settings.pomodoro;
+  const { focusMin, shortMin, longMin, cyclesUntilLong, autoStartBreaks, autoStartFocus } = data.settings.pomodoro;
 
   const [draft, setDraft] = useState({ focusMin, shortMin, longMin, cyclesUntilLong });
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,6 +46,14 @@ export function PomodoroSettings() {
   const update = (key: keyof typeof draft) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
     setDraft((d) => ({ ...d, [key]: raw === "" ? 0 : Number.parseInt(raw, 10) }));
+  };
+
+  const handleToggleAutoStartBreaks = (checked: boolean) => {
+    setPomodoroConfig({ autoStartBreaks: checked });
+  };
+
+  const handleToggleAutoStartFocus = (checked: boolean) => {
+    setPomodoroConfig({ autoStartFocus: checked });
   };
 
   return (
@@ -97,6 +105,54 @@ export function PomodoroSettings() {
             value={draft.cyclesUntilLong || ""}
             onChange={update("cyclesUntilLong")}
           />
+        </div>
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-[var(--border-soft)] space-y-4">
+        <div className="flex items-center justify-between text-sm">
+          <div>
+            <div className="text-sm font-medium">Auto-start Breaks</div>
+            <div className="text-xs text-[var(--fg-soft)]">Start break session automatically</div>
+          </div>
+          <label className="relative inline-flex h-6 w-11 cursor-pointer items-center">
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={!!autoStartBreaks}
+              onChange={(e) => handleToggleAutoStartBreaks(e.target.checked)}
+            />
+            <span
+              className="absolute inset-0 rounded-full transition-colors animate-[fade-in_0.2s]"
+              style={{ background: autoStartBreaks ? "var(--accent)" : "var(--border)" }}
+            />
+            <span
+              className="absolute h-4 w-4 rounded-full bg-cream-50 transition-transform duration-200"
+              style={{ transform: autoStartBreaks ? "translateX(24px)" : "translateX(4px)" }}
+            />
+          </label>
+        </div>
+
+        <div className="flex items-center justify-between text-sm">
+          <div>
+            <div className="text-sm font-medium">Auto-start Focus</div>
+            <div className="text-xs text-[var(--fg-soft)]">Start next focus cycle automatically</div>
+          </div>
+          <label className="relative inline-flex h-6 w-11 cursor-pointer items-center">
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={!!autoStartFocus}
+              onChange={(e) => handleToggleAutoStartFocus(e.target.checked)}
+            />
+            <span
+              className="absolute inset-0 rounded-full transition-colors animate-[fade-in_0.2s]"
+              style={{ background: autoStartFocus ? "var(--accent)" : "var(--border)" }}
+            />
+            <span
+              className="absolute h-4 w-4 rounded-full bg-cream-50 transition-transform duration-200"
+              style={{ transform: autoStartFocus ? "translateX(24px)" : "translateX(4px)" }}
+            />
+          </label>
         </div>
       </div>
     </Card>

@@ -21,6 +21,7 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
         task.completed
           ? "bg-cream-100/40 dark:bg-ink-400/30"
           : "bg-[var(--bg-card)] hover:border-[var(--accent)]/40",
+        task.priority === "high" && !task.completed && "border-l-[3px] border-l-gold-300",
       )}
       style={{ borderColor: task.completed ? "var(--border-soft)" : "var(--border-soft)" }}
     >
@@ -36,7 +37,7 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
       >
         {task.completed && <Check className="h-3 w-3" strokeWidth={3} />}
       </button>
-
+ 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
@@ -60,6 +61,18 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
                 </span>
               )}
               {task.durationMin && <span className="opacity-70">· {task.durationMin} min</span>}
+              {task.priority && task.priority !== "medium" && (
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-0.5 rounded px-1.5 py-0.25 text-[9px] font-medium uppercase tracking-wider border",
+                    task.priority === "high"
+                      ? "bg-gold-50/50 text-gold-500 border-gold-200/50"
+                      : "bg-ink-50/50 text-ink-300 border-ink-100/50"
+                  )}
+                >
+                  {task.priority}
+                </span>
+              )}
               <span
                 className={cn(
                   "ml-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider",

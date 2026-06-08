@@ -80,6 +80,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const uid = user.id;
     userIdRef.current = uid;
 
+    if (uid.startsWith("guest-")) {
+      setSyncing(false);
+      didPullRef.current = true;
+      return;
+    }
+
     if (didPullRef.current) return;
     didPullRef.current = true;
 
@@ -111,7 +117,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   // ── Helper: fire-and-forget Supabase sync ──
   const sync = useCallback((fn: () => Promise<void>) => {
-    if (!userIdRef.current) return;
+    if (!userIdRef.current || userIdRef.current.startsWith("guest-")) return;
     fn().catch(() => {});
   }, []);
 

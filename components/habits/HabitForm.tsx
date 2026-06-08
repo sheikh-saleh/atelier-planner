@@ -42,6 +42,7 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
   const { addHabit, updateHabit } = useData();
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
   const [icon, setIcon] = useState(initial?.icon ?? "Activity");
   const [color, setColor] = useState(initial?.color ?? "sage");
   const [frequency, setFrequency] = useState<Frequency>(initial?.frequency ?? "daily");
@@ -52,6 +53,7 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
     if (!open) return;
     setTitle(initial?.title ?? "");
     setDescription(initial?.description ?? "");
+    setNotes(initial?.notes ?? "");
     setIcon(initial?.icon ?? "Activity");
     setColor(initial?.color ?? "sage");
     setFrequency(initial?.frequency ?? "daily");
@@ -61,6 +63,7 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
   const reset = () => {
     setTitle(initial?.title ?? "");
     setDescription(initial?.description ?? "");
+    setNotes(initial?.notes ?? "");
     setIcon(initial?.icon ?? "Activity");
     setColor(initial?.color ?? "sage");
     setFrequency(initial?.frequency ?? "daily");
@@ -73,6 +76,7 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
     const payload = {
       title: title.trim(),
       description: description.trim() || undefined,
+      notes: notes.trim() || undefined,
       icon,
       color,
       frequency,
@@ -101,7 +105,12 @@ export function HabitForm({ open, onClose, initial }: HabitFormProps) {
 
         <div className="space-y-1.5">
           <Label>Description (optional)</Label>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="A small note to remind you why" />
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="e.g. Read daily to expand knowledge" />
+        </div>
+
+        <div className="space-y-1.5">
+          <Label>Motivation Note (optional)</Label>
+          <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. Focus on quality, not speed" />
         </div>
 
         <div className="space-y-1.5">

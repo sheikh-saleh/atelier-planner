@@ -10,6 +10,7 @@ export interface Task {
   category: Category;
   completed: boolean;
   createdAt: number;
+  priority?: "low" | "medium" | "high";
 }
 
 export type Frequency = "daily" | "weekdays" | "weekends" | "custom";
@@ -24,6 +25,8 @@ export interface Habit {
   customDays?: number[]; // 0=Sun..6=Sat
   completedDates: string[]; // ISO dates
   createdAt: number;
+  isArchived?: boolean;
+  notes?: string;
 }
 
 export interface JournalEntry {
@@ -49,6 +52,8 @@ export interface PomodoroConfig {
   shortMin: number;
   longMin: number;
   cyclesUntilLong: number;
+  autoStartBreaks?: boolean;
+  autoStartFocus?: boolean;
 }
 
 // Discriminated union for journal updates: "no change" vs "explicit clear" vs "set value"
@@ -59,6 +64,7 @@ export interface Settings {
   notificationsEnabled: boolean;
   soundEnabled: boolean;
   pomodoro: PomodoroConfig;
+  soundType?: "chime" | "bell" | "digital" | "gong";
 }
 
 export interface AppData {

@@ -9,7 +9,7 @@ import { Input, Label } from "@/components/ui/Input";
 type Mode = "signin" | "signup" | "reset";
 
 export function AuthForm() {
-  const { signIn, signUp, resetPassword } = useAuth();
+  const { signIn, signUp, resetPassword, signInGuest } = useAuth();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -155,6 +155,25 @@ export function AuthForm() {
                 ? "Create account"
                 : "Send reset link"}
         </Button>
+
+        {mode === "signin" && (
+          <>
+            <div className="relative my-4 flex py-1 items-center">
+              <div className="flex-grow border-t border-[var(--border-soft)]"></div>
+              <span className="flex-shrink mx-4 text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">Or</span>
+              <div className="flex-grow border-t border-[var(--border-soft)]"></div>
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              className="w-full font-serif italic"
+              onClick={signInGuest}
+            >
+              Continue as Guest (Local Only)
+            </Button>
+          </>
+        )}
       </form>
 
       <div className="mt-6 text-center">

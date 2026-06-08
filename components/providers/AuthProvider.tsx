@@ -12,12 +12,26 @@ interface AuthContextValue {
   signUp: (email: string, password: string, name?: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
+  signInGuest: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
+  const [guestUser, setGuestUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("atelier-guest-user");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const mountedRef = useRef(true);
 
@@ -71,6 +85,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setSession(null);
+    setGuestUser(null);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("atelier-guest-user");
+    }
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
@@ -80,17 +98,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: error?.message };
   }, []);
 
+  const signInGuest = useCallback(async () => {
+    const dummyUser: User = {
+      id: "guest-user",
+      email: "guest@local",
+      app_metadata: {},
+      user_metadata: { full_name: "Guest User" },
+      aud: "authenticated",
+      created_at: new Date().toISOString(),
+    };
+    setGuestUser(dummyUser);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("atelier-guest-user", JSON.stringify(dummyUser));
+    }
+  }, []);
+
+  const user = useMemo(() => session?.user ?? guestUser ?? null, [session, guestUser]);
+
   const value = useMemo<AuthContextValue>(
     () => ({
-      user: session?.user ?? null,
+      user,
       session,
       loading,
       signIn,
       signUp,
       signOut,
       resetPassword,
+      signInGuest,
     }),
-    [session, loading, signIn, signUp, signOut, resetPassword],
+    [user, session, loading, signIn, signUp, signOut, resetPassword, signInGuest],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

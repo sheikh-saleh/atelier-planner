@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { ProgressRing } from "@/components/ui/ProgressRing";
 import { useData } from "@/components/providers/DataProvider";
 import type { PomodoroType } from "@/lib/types";
-import { playChime, sendNotification } from "@/lib/notifications";
+import { playChime, sendNotification, playTimerSound } from "@/lib/notifications";
 import { secondsToClock, todayISO } from "@/lib/dateUtils";
 import { useHydrated } from "@/hooks/useHydrated";
 import { cn } from "@/lib/utils";
@@ -21,8 +21,8 @@ const labels: Record<PomodoroType, { title: string; shortLabel: string; sub: str
 export function PomodoroTimer() {
   const { data, logPomodoro } = useData();
   const hydrated = useHydrated();
-  const { focusMin, shortMin, longMin, cyclesUntilLong } = data.settings.pomodoro;
-  const soundEnabled = data.settings.soundEnabled;
+  const { focusMin, shortMin, longMin, cyclesUntilLong, autoStartBreaks, autoStartFocus } = data.settings.pomodoro;
+  const { soundEnabled, soundType, notificationsEnabled } = data.settings;
 
   const [type, setType] = useState<PomodoroType>("focus");
   const [secondsLeft, setSecondsLeft] = useState(focusMin * 60);
@@ -61,7 +61,13 @@ export function PomodoroTimer() {
   useEffect(() => {
     if (!running) return;
     const id = window.setInterval(() => {
-      setSecondsLeft((s) => Math.max(0, s - 1));
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          setRunning(false);
+          return 0;
+        }
+        return s - 1;
+      });
     }, 1000);
     return () => window.clearInterval(id);
   }, [running]);
@@ -81,24 +87,28 @@ export function PomodoroTimer() {
       completed: true,
       startedAt: startedAtRef.current ?? Date.now(),
     });
-    if (soundEnabled) playChime();
-    sendNotification("Atelier", `${labels[type].title} complete.`);
+    if (soundEnabled) playTimerSound(soundType);
+    sendNotification("Atelier", `${labels[type].title} complete.`, notificationsEnabled);
 
     let next: PomodoroType;
     let nextCycles = cyclesCompleted;
+    let autoStart = false;
+
     if (type === "focus") {
       nextCycles = cyclesCompleted + 1;
       next = nextCycles % cyclesUntilLong === 0 ? "long" : "short";
+      autoStart = !!autoStartBreaks;
     } else {
       next = "focus";
+      autoStart = !!autoStartFocus;
     }
     setCyclesCompleted(nextCycles);
     setType(next);
     plannedDurationRef.current = durationFor(next);
-    startedAtRef.current = null;
-    setRunning(false);
+    startedAtRef.current = autoStart ? Date.now() : null;
+    setRunning(autoStart);
     setSecondsLeft(durationFor(next));
-  }, [secondsLeft, running, type, cyclesCompleted, cyclesUntilLong, soundEnabled, logPomodoro, durationFor]);
+  }, [secondsLeft, running, type, cyclesCompleted, cyclesUntilLong, soundEnabled, soundType, notificationsEnabled, autoStartBreaks, autoStartFocus, logPomodoro, durationFor]);
 
   // Tab title
   useEffect(() => {
