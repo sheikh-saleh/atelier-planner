@@ -54,14 +54,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   // ── Hydrate from localStorage on mount (or seed demo data if flagged) ──
   useEffect(() => {
-    if (!user && isSeedRequested()) {
+    if (isSeedRequested()) {
       setData(buildSeedData());
       clearSeedFlag();
     } else {
       setData(loadData());
     }
     setHydrated(true);
-  }, [user]);
+  }, []);
 
   // ── Save to localStorage on every change ──
   useEffect(() => {
