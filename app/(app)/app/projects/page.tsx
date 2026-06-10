@@ -10,7 +10,8 @@ import { PromptCompiler } from "@/components/planner/PromptCompiler";
 import { useAuth } from "@/components/providers/AuthProvider";
 import type { ProjectBrief, ProjectBriefContent } from "@/lib/types";
 import { Sparkles, Save, Plus, Trash2, Clock, FileText } from "lucide-react";
-import { generateBrief, saveBrief, getBriefs, deleteBrief } from "./actions";
+import { generateBrief, saveBrief as serverSave, getBriefs as serverGet, deleteBrief as serverDelete } from "./actions";
+import { getLocalBriefs, saveLocalBrief, deleteLocalBrief } from "@/lib/planner-store";
 import { useHydrated } from "@/hooks/useHydrated";
 
 const EMPTY_CONTENT: ProjectBriefContent = {
@@ -24,7 +25,11 @@ const EMPTY_CONTENT: ProjectBriefContent = {
   risks: "",
 };
 
-export default function PlannerPage() {
+function isRealUser(userId: string): boolean {
+  return !!userId && userId !== "guest-user" && userId !== "local";
+}
+
+export default function ProjectsPage() {
   const { user } = useAuth();
   const hydrated = useHydrated();
   const [idea, setIdea] = useState("");
@@ -35,23 +40,35 @@ export default function PlannerPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState("");
 
   const userId = user?.id ?? "";
+  const authed = isRealUser(userId);
 
   const loadBriefs = useCallback(async () => {
     if (!userId) return;
-    const result = await getBriefs(userId);
-    if (result.briefs) setBriefs(result.briefs);
-  }, [userId]);
+    if (authed) {
+      const result = await serverGet(userId);
+      if (result.briefs) setBriefs(result.briefs);
+    } else {
+      setBriefs(getLocalBriefs());
+    }
+  }, [userId, authed]);
 
   useEffect(() => {
     if (hydrated && userId) loadBriefs();
   }, [hydrated, userId, loadBriefs]);
 
+  const showFeedback = (msg: string) => {
+    setFeedback(msg);
+    setTimeout(() => setFeedback(""), 3000);
+  };
+
   const handleGenerate = async () => {
     if (!idea.trim()) return;
     setGenerating(true);
     setError("");
+    setFeedback("");
     setActiveBrief(null);
     setSelectedBriefId(null);
 
@@ -71,18 +88,27 @@ export default function PlannerPage() {
     if (!userId || !idea.trim()) return;
     setSaving(true);
     setError("");
+    setFeedback("");
 
-    const result = await saveBrief(userId, idea.trim(), content, selectedBriefId ?? undefined);
-    if (result.error) {
-      setError(result.error);
-      setSaving(false);
-      return;
+    if (authed) {
+      const result = await serverSave(userId, idea.trim(), content, selectedBriefId ?? undefined);
+      if (result.error) {
+        setError(result.error);
+        setSaving(false);
+        return;
+      }
+      if (result.brief) {
+        setActiveBrief(result.brief);
+        setSelectedBriefId(result.brief.id);
+      }
+      showFeedback(selectedBriefId ? "Updated!" : "Saved!");
+    } else {
+      const brief = saveLocalBrief(idea.trim(), content, selectedBriefId ?? undefined);
+      setActiveBrief(brief);
+      setSelectedBriefId(brief.id);
+      showFeedback(selectedBriefId ? "Updated!" : "Saved!");
     }
 
-    if (result.brief) {
-      setActiveBrief(result.brief);
-      setSelectedBriefId(result.brief.id);
-    }
     await loadBriefs();
     setSaving(false);
   };
@@ -93,11 +119,16 @@ export default function PlannerPage() {
     setIdea(brief.idea);
     setSelectedBriefId(brief.id);
     setError("");
+    setFeedback("");
   };
 
   const handleDeleteBrief = async (briefId: string) => {
     if (!userId) return;
-    await deleteBrief(briefId, userId);
+    if (authed) {
+      await serverDelete(briefId, userId);
+    } else {
+      deleteLocalBrief(briefId);
+    }
     if (selectedBriefId === briefId) {
       setActiveBrief(null);
       setContent(EMPTY_CONTENT);
@@ -105,6 +136,7 @@ export default function PlannerPage() {
       setSelectedBriefId(null);
     }
     await loadBriefs();
+    showFeedback("Deleted");
   };
 
   const handleNew = () => {
@@ -113,6 +145,7 @@ export default function PlannerPage() {
     setIdea("");
     setSelectedBriefId(null);
     setError("");
+    setFeedback("");
   };
 
   const hasContent = content.summary || content.coreFeatures || content.techStack;
@@ -132,6 +165,14 @@ export default function PlannerPage() {
         title="Projects"
         subtitle="Describe your idea. Get a structured brief. Build with clarity."
       />
+
+      {feedback && (
+        <div
+          className="rounded-lg border border-sage-300 bg-sage-50 p-4 text-sm text-sage-600 dark:bg-sage-900/20 dark:text-sage-300"
+        >
+          {feedback}
+        </div>
+      )}
 
       {error && (
         <div
@@ -200,7 +241,7 @@ export default function PlannerPage() {
                 variant="secondary"
                 size="sm"
                 onClick={handleSave}
-                disabled={saving || !userId}
+                disabled={saving}
               >
                 <Save className="h-3.5 w-3.5" strokeWidth={1.5} />
                 {saving ? "Saving..." : selectedBriefId ? "Update" : "Save"}
