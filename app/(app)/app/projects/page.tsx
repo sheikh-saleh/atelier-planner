@@ -120,7 +120,7 @@ export default function PlannerPage() {
   if (!hydrated) {
     return (
       <div className="space-y-4">
-        <Header title="Project Planner" />
+        <Header title="Projects" />
         <div className="h-32 rounded-xl bg-cream-200 dark:bg-ink-400 animate-pulse" />
       </div>
     );
@@ -129,7 +129,7 @@ export default function PlannerPage() {
   return (
     <div className="space-y-6 sm:space-y-8">
       <Header
-        title="Project Planner"
+        title="Projects"
         subtitle="Describe your idea. Get a structured brief. Build with clarity."
       />
 

@@ -10,6 +10,8 @@ const nextConfig = {
       { source: "/journal", destination: "/app/journal", permanent: true },
       { source: "/stats", destination: "/app/stats", permanent: true },
       { source: "/settings", destination: "/app/settings", permanent: true },
+      { source: "/app/planner", destination: "/app/projects", permanent: true },
+      { source: "/planner", destination: "/app/projects", permanent: true },
     ];
   },
 };

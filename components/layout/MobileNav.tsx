@@ -8,7 +8,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
   { href: "/app", label: "Today", icon: Home },
-  { href: "/app/planner", label: "Planner", icon: Lightbulb },
+  { href: "/app/projects", label: "Projects", icon: Lightbulb },
   { href: "/app/habits", label: "Habits", icon: CheckSquare },
   { href: "/app/timer", label: "Focus", icon: Timer },
   { href: "/app/settings", label: "More", icon: SettingsIcon },
