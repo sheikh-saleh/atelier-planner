@@ -6,11 +6,11 @@ import type { ProjectBriefContent, ProjectBrief } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 
 const ollama = createOpenAI({
-  baseURL: process.env.OLLAMA_BASE_URL ?? "http://localhost:11434/v1",
+  baseURL: process.env.OLLAMA_BASE_URL ?? "https://ollama.com/v1",
   apiKey: process.env.OLLAMA_API_KEY ?? "",
 });
 
-const model = ollama(process.env.OLLAMA_MODEL ?? "qwen2.5-coder:7b");
+const model = ollama(process.env.OLLAMA_MODEL ?? "gemma3:12b");
 
 const SYSTEM_PROMPT = `You are a senior software architect. Given a rough app idea, produce a concise project brief.
 
