@@ -1,6 +1,7 @@
 "use server";
 
 import { createOpenAI } from "@ai-sdk/openai";
+import { createClient } from "@supabase/supabase-js";
 import { generateText } from "ai";
 import type { ProjectBriefContent, ProjectBrief } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
@@ -82,15 +83,26 @@ export async function generateBrief(idea: string): Promise<{
   }
 }
 
+function authedClient(accessToken: string) {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    { global: { headers: { Authorization: `Bearer ${accessToken}` } } },
+  );
+}
+
 export async function saveBrief(
   userId: string,
   idea: string,
   content: ProjectBriefContent,
+  accessToken: string,
   briefId?: string,
 ): Promise<{ brief?: ProjectBrief; error?: string }> {
   try {
+    const db = authedClient(accessToken);
+
     if (briefId) {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("project_briefs")
         .update({ idea, content, updated_at: new Date().toISOString() })
         .eq("id", briefId)
@@ -102,7 +114,7 @@ export async function saveBrief(
       return { brief: mapBrief(data) };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from("project_briefs")
       .insert({ user_id: userId, idea, content })
       .select()
@@ -116,12 +128,17 @@ export async function saveBrief(
   }
 }
 
-export async function getBriefs(userId: string): Promise<{
+export async function getBriefs(
+  userId: string,
+  accessToken: string,
+): Promise<{
   briefs?: ProjectBrief[];
   error?: string;
 }> {
   try {
-    const { data, error } = await supabase
+    const db = authedClient(accessToken);
+
+    const { data, error } = await db
       .from("project_briefs")
       .select("*")
       .eq("user_id", userId)
@@ -138,9 +155,12 @@ export async function getBriefs(userId: string): Promise<{
 export async function deleteBrief(
   briefId: string,
   userId: string,
+  accessToken: string,
 ): Promise<{ error?: string }> {
   try {
-    const { error } = await supabase
+    const db = authedClient(accessToken);
+
+    const { error } = await db
       .from("project_briefs")
       .delete()
       .eq("id", briefId)

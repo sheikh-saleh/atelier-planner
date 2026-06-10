@@ -30,7 +30,7 @@ function isRealUser(userId: string): boolean {
 }
 
 export default function ProjectsPage() {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const hydrated = useHydrated();
   const [idea, setIdea] = useState("");
   const [briefs, setBriefs] = useState<ProjectBrief[]>([]);
@@ -45,15 +45,17 @@ export default function ProjectsPage() {
   const userId = user?.id ?? "";
   const authed = isRealUser(userId);
 
+  const token = session?.access_token ?? "";
+
   const loadBriefs = useCallback(async () => {
     if (!userId) return;
-    if (authed) {
-      const result = await serverGet(userId);
+    if (authed && token) {
+      const result = await serverGet(userId, token);
       if (result.briefs) setBriefs(result.briefs);
     } else {
       setBriefs(getLocalBriefs());
     }
-  }, [userId, authed]);
+  }, [userId, authed, token]);
 
   useEffect(() => {
     if (hydrated && userId) loadBriefs();
@@ -90,8 +92,8 @@ export default function ProjectsPage() {
     setError("");
     setFeedback("");
 
-    if (authed) {
-      const result = await serverSave(userId, idea.trim(), content, selectedBriefId ?? undefined);
+    if (authed && token) {
+      const result = await serverSave(userId, idea.trim(), content, token, selectedBriefId ?? undefined);
       if (result.error) {
         setError(result.error);
         setSaving(false);
@@ -124,8 +126,8 @@ export default function ProjectsPage() {
 
   const handleDeleteBrief = async (briefId: string) => {
     if (!userId) return;
-    if (authed) {
-      await serverDelete(briefId, userId);
+    if (authed && token) {
+      await serverDelete(briefId, userId, token);
     } else {
       deleteLocalBrief(briefId);
     }
