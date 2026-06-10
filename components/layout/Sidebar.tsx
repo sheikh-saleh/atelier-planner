@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer, User } from "lucide-react";
+import { Calendar, CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer, User, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
@@ -10,6 +10,7 @@ const items = [
   { href: "/app", label: "Today", icon: Home },
   { href: "/app/habits", label: "Habits", icon: CheckSquare },
   { href: "/app/timer", label: "Pomodoro", icon: Timer },
+  { href: "/app/planner", label: "Planner", icon: Lightbulb },
   { href: "/app/journal", label: "Journal", icon: PenLine },
   { href: "/app/stats", label: "Insights", icon: LineChart },
   { href: "/app/settings", label: "Settings", icon: SettingsIcon },

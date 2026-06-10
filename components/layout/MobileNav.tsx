@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
+import { CheckSquare, Home, LineChart, Lightbulb, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
   { href: "/app", label: "Today", icon: Home },
+  { href: "/app/planner", label: "Planner", icon: Lightbulb },
   { href: "/app/habits", label: "Habits", icon: CheckSquare },
   { href: "/app/timer", label: "Focus", icon: Timer },
-  { href: "/app/journal", label: "Journal", icon: PenLine },
-  { href: "/app/stats", label: "Stats", icon: LineChart },
   { href: "/app/settings", label: "More", icon: SettingsIcon },
 ];
 

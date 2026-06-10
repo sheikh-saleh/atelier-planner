@@ -74,3 +74,23 @@ export interface AppData {
   pomodoros: PomodoroSession[];
   settings: Settings;
 }
+
+export interface ProjectBriefContent {
+  summary: string;
+  targetUsers: string;
+  coreFeatures: string;
+  techStack: string;
+  routes: string;
+  dataModel: string;
+  phases: string;
+  risks: string;
+}
+
+export interface ProjectBrief {
+  id: string;
+  userId: string;
+  idea: string;
+  content: ProjectBriefContent;
+  createdAt: string;
+  updatedAt: string;
+}
