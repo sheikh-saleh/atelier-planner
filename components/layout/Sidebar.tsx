@@ -22,12 +22,15 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-r" style={{ borderColor: "var(--border-soft)" }}>
       <div className="flex flex-col h-full px-5 py-8">
-        <Link href="/app" className="block mb-10">
-          <div className="font-display text-3xl italic tracking-wide" style={{ color: "var(--fg)" }}>
-            Atelier
-          </div>
-          <div className="font-serif text-[10px] uppercase tracking-[0.3em] text-[var(--fg-soft)] mt-1">
-            Daily Routine
+        <Link href="/app" className="flex items-center gap-3 mb-10">
+          <img src="/favicon.svg" alt="" className="h-10 w-10 shrink-0" />
+          <div>
+            <div className="font-display text-2xl italic tracking-wide" style={{ color: "var(--fg)" }}>
+              Atelier
+            </div>
+            <div className="font-serif text-[10px] uppercase tracking-[0.3em] text-[var(--fg-soft)]">
+              Daily Routine
+            </div>
           </div>
         </Link>
 

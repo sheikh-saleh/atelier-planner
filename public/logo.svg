@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80">
+  <defs>
+    <style>
+      .a { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; font-size: 44px; font-style: italic; font-weight: 700; }
+      .b { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; letter-spacing: 0.35em; fill: #8a867e; }
+    </style>
+  </defs>
+  <rect x="0" y="8" width="64" height="64" rx="16" fill="#2C2A26"/>
+  <text x="32" y="54" text-anchor="middle" fill="#FAF7F2" class="a">A</text>
+  <circle cx="32" cy="60" r="2.5" fill="none" stroke="#B8956A" stroke-width="1"/>
+  <text x="80" y="48" fill="#2C2A26" class="a">Atelier</text>
+  <text x="80" y="62" fill="#8a867e" class="b">Daily Routine</text>
+</svg>
