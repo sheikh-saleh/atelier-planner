@@ -12,5 +12,3 @@ tsconfig.tsbuildinfo
 public/sw.js
 public/swe-worker-*.js
 
-# Generated screenshots (capture with: npm run screenshots)
-public/screenshots/
