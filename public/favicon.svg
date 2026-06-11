@@ -1,5 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#2C2A26"/>
-  <text x="32" y="46" text-anchor="middle" font-family="Georgia,'Playfair Display',serif" font-size="36" font-style="italic" font-weight="700" fill="#FAF7F2">A</text>
-  <circle cx="32" cy="52" r="2.5" fill="none" stroke="#B8956A" stroke-width="1.2"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3D3A35"/>
+      <stop offset="100%" stop-color="#2C2A26"/>
+    </linearGradient>
+    <linearGradient id="a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8DCC8"/>
+      <stop offset="100%" stop-color="#FAF7F2"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Georgia,'Playfair Display',serif" font-size="38" font-style="italic" font-weight="700" fill="url(#a)" letter-spacing="-1">A</text>
+  <circle cx="32" cy="52" r="2" fill="#B8956A"/>
+  <circle cx="32" cy="52" r="4" fill="none" stroke="#B8956A" stroke-width="0.8" opacity="0.4"/>
 </svg>
