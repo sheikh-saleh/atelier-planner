@@ -42,11 +42,8 @@ export function Header({ title, subtitle, action, showDate = true }: HeaderProps
 
 export function Brand({ small = false }: { small?: boolean }) {
   return (
-    <Link href="/app" className="lg:hidden inline-flex items-center gap-2">
-      <img src="/favicon.svg" alt="" className={small ? "h-5 w-5" : "h-7 w-7"} />
-      <span className={small ? "font-display text-lg italic" : "font-display text-xl italic"} style={{ color: "var(--fg)" }}>
-        Atelier
-      </span>
+    <Link href="/app" className="inline-flex items-center gap-2" style={{ color: "var(--fg)" }}>
+      <img src="/logo.svg" alt="Atelier" className={small ? "h-5" : "h-7"} style={{ width: "auto" }} />
     </Link>
   );
 }
