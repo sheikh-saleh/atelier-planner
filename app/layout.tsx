@@ -100,13 +100,15 @@ const themeScript = `
     var theme = 'light';
     if (raw) {
       var parsed = JSON.parse(raw);
-      if (parsed && parsed.settings && parsed.settings.theme === 'dark') {
-        theme = 'dark';
+      if (parsed && parsed.settings) {
+        theme = parsed.settings.theme || 'light';
       }
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       theme = 'dark';
     }
+    document.documentElement.classList.remove('dark', 'sepia');
     if (theme === 'dark') document.documentElement.classList.add('dark');
+    else if (theme === 'sepia') document.documentElement.classList.add('sepia');
   } catch (e) {}
 })();
 `;
