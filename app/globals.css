@@ -164,6 +164,37 @@
   --ink-600: #1F1A16;
   --ink-700: #151210;
 
+  /* Sage scale (sepia) */
+  --sage-50: #E8EDE7;
+  --sage-100: #D4DDD3;
+  --sage-200: #A8B8A5;
+  --sage-300: #7D937A;
+  --sage-400: #5A7058;
+  --sage-500: #405240;
+
+  /* Gold scale (sepia) */
+  --gold-50: #F2EBE0;
+  --gold-100: #E5D9C5;
+  --gold-200: #C9B594;
+  --gold-300: #A8916A;
+  --gold-400: #8A7552;
+  --gold-500: #6B5A3F;
+
+  /* Burgundy scale (sepia) */
+  --burgundy-50: #F0E4E1;
+  --burgundy-100: #DFC0BA;
+  --burgundy-200: #BF8880;
+  --burgundy-300: #955C54;
+  --burgundy-400: #6B3D37;
+
+  /* Dusty blue scale (sepia) */
+  --blue-dusty-50: #E5EBF0;
+  --blue-dusty-100: #CDD8E3;
+  --blue-dusty-200: #9CB5C9;
+  --blue-dusty-300: #6D91AF;
+  --blue-dusty-400: #4D7394;
+  --blue-dusty-500: #335676;
+
   --shadow: 61, 56, 48;
 }
 
