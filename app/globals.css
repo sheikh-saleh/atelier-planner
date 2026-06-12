@@ -128,6 +128,45 @@
   --shadow: 0, 0, 0;
 }
 
+.sepia {
+  --bg: #F5F0E6;
+  --bg-soft: #EDE7D8;
+  --bg-card: #FAF7F0;
+  --fg: #3D3830;
+  --fg-soft: #706858;
+  --fg-muted: #A89E8C;
+  --border: #D8D0C2;
+  --border-soft: #E8E0D4;
+  --accent: #5A7794;
+  --accent-soft: #D6DFE8;
+
+  /* Sepia scale */
+  --sepia-50: #FAF7F0;
+  --sepia-100: #F5F0E6;
+  --sepia-200: #EDE7D8;
+  --sepia-300: #D8D0C2;
+  --sepia-400: #A89E8C;
+  --sepia-500: #706858;
+
+  /* Reuse existing scales with sepia overrides */
+  --cream-50: #FCFAF6;
+  --cream-100: #FAF7F0;
+  --cream-200: #F5F0E6;
+  --cream-300: #EDE7D8;
+  --cream-400: #D8D0C2;
+
+  --ink-50: #FAF7F0;
+  --ink-100: #E8E0D4;
+  --ink-200: #A89E8C;
+  --ink-300: #706858;
+  --ink-400: #3D3830;
+  --ink-500: #2A2520;
+  --ink-600: #1F1A16;
+  --ink-700: #151210;
+
+  --shadow: 61, 56, 48;
+}
+
 html, body {
   background: var(--bg);
   color: var(--fg);
