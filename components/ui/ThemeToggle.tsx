@@ -20,7 +20,15 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         className,
       )}
       style={{ borderColor: "var(--border-soft)" }}
-      aria-label={mounted ? (theme === "dark" ? "Switch to light" : "Switch to dark") : "Toggle theme"}
+      aria-label={
+        mounted
+          ? theme === "dark"
+            ? "Switch to sepia"
+            : theme === "sepia"
+            ? "Switch to light"
+            : "Switch to dark"
+          : "Toggle theme"
+      }
       suppressHydrationWarning
     >
       {mounted && (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />)}
