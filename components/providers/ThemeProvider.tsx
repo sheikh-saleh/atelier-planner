@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useData } from "./DataProvider";
 
-type Theme = "light" | "dark";
+type Theme = "light" | "dark" | "sepia";
 
 interface ThemeContextValue {
   theme: Theme;
