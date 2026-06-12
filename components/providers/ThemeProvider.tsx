@@ -28,12 +28,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     const root = document.documentElement;
+    root.classList.remove("dark", "sepia");
     if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
+    else if (theme === "sepia") root.classList.add("sepia");
   }, [theme, hydrated]);
 
   const toggleTheme = useCallback(() => {
-    setSettings({ theme: theme === "dark" ? "light" : "dark" });
+    const next = theme === "light" ? "dark" : theme === "dark" ? "sepia" : "light";
+    setSettings({ theme: next });
   }, [theme, setSettings]);
 
   const setTheme = useCallback((t: Theme) => setSettings({ theme: t }), [setSettings]);
