@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/Card";
 import { HabitItem } from "./HabitItem";
 import { HabitForm } from "./HabitForm";
 import { HabitCalendar } from "./HabitCalendar";
+import { AnimatedList } from "@/components/motion";
 import { useData } from "@/components/providers/DataProvider";
 import type { Habit } from "@/lib/types";
 import { computeStreak, isHabitCompletedOn, isHabitScheduledOn } from "@/lib/habitUtils";
@@ -137,16 +138,20 @@ export function HabitList() {
               </p>
             </Card>
           ) : (
-            todayHabits.map((h) => (
-              <HabitItem
-                key={h.id}
-                habit={h}
-                date={today}
-                onToggle={toggleHabitOnDate}
-                onEdit={handleEdit}
-                onDelete={deleteHabit}
-              />
-            ))
+            <AnimatedList
+              items={todayHabits}
+              keyExtractor={(h) => h.id}
+              renderItem={(h) => (
+                <HabitItem
+                  habit={h}
+                  date={today}
+                  onToggle={toggleHabitOnDate}
+                  onEdit={handleEdit}
+                  onDelete={deleteHabit}
+                />
+              )}
+              className="space-y-2"
+            />
           )}
 
           {archivedHabits.length > 0 && (
@@ -160,18 +165,20 @@ export function HabitList() {
               </button>
 
               {showArchived && (
-                <div className="mt-2 space-y-2 animate-[fade-in_0.2s_ease-out]">
-                  {archivedHabits.map((h) => (
+                <AnimatedList
+                  items={archivedHabits}
+                  keyExtractor={(h) => h.id}
+                  renderItem={(h) => (
                     <HabitItem
-                      key={h.id}
                       habit={h}
                       date={today}
                       onToggle={toggleHabitOnDate}
                       onEdit={handleEdit}
                       onDelete={deleteHabit}
                     />
-                  ))}
-                </div>
+                  )}
+                  className="mt-2 space-y-2"
+                />
               )}
             </div>
           )}

@@ -5,6 +5,7 @@ import { Plus, Sun, Sunset, Sunrise, Coffee, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { TaskItem } from "./TaskItem";
 import { TaskForm } from "./TaskForm";
+import { AnimatedList } from "@/components/motion";
 import { useData } from "@/components/providers/DataProvider";
 import type { Task } from "@/lib/types";
 import { getTimeOfDay, todayISO } from "@/lib/dateUtils";
@@ -128,17 +129,19 @@ export function TaskList({ date, showAdd = true, emptyMessage, filterCompleted }
                   <div className="flex-1 h-px" style={{ background: "var(--border-soft)" }} />
                   <span className="text-[10px] font-medium text-[var(--fg-muted)]">{list.length}</span>
                 </div>
-                <div className="space-y-2">
-                  {list.map((t) => (
+                <AnimatedList
+                  items={list}
+                  keyExtractor={(task) => task.id}
+                  renderItem={(task) => (
                     <TaskItem
-                      key={t.id}
-                      task={t}
+                      task={task}
                       onToggle={toggleTask}
                       onEdit={handleEdit}
                       onDelete={handleDelete}
                     />
-                  ))}
-                </div>
+                  )}
+                  className="space-y-2"
+                />
               </section>
             );
           })}

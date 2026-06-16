@@ -6,6 +6,7 @@ import type { Habit } from "@/lib/types";
 import { colorMap, cn } from "@/lib/utils";
 import { computeStreak } from "@/lib/habitUtils";
 import { useData } from "@/components/providers/DataProvider";
+import { SwipeableItem } from "@/components/motion";
 
 interface HabitItemProps {
   habit: Habit;
@@ -23,81 +24,88 @@ export function HabitItem({ habit, date, onToggle, onEdit, onDelete }: HabitItem
   const { updateHabit } = useData();
 
   return (
-    <div
-      className={cn(
-        "group flex items-center gap-3 rounded-lg border p-3.5 transition-all",
-        completed ? colors.soft : "bg-[var(--bg-card)] hover:border-[var(--accent)]/40",
-        habit.isArchived && "opacity-60 border-dashed"
-      )}
-      style={{ borderColor: "var(--border-soft)" }}
+    <SwipeableItem
+      onSwipeLeft={() => onDelete(habit.id)}
+      onSwipeRight={() => onToggle(habit.id, date)}
+      leftLabel="Archive"
+      rightLabel="Done"
     >
-      <button
-        onClick={() => onToggle(habit.id, date)}
+      <div
         className={cn(
-          "flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition-all",
-          completed ? `${colors.bg} text-cream-50` : "border-2 border-dashed border-[var(--fg-muted)]/40 hover:border-[var(--accent)]",
+          "group flex items-center gap-3 rounded-lg border p-3.5 transition-all",
+          completed ? colors.soft : "bg-[var(--bg-card)] hover:border-[var(--accent)]/40",
+          habit.isArchived && "opacity-60 border-dashed"
         )}
-        aria-label={completed ? "Unmark" : "Mark complete"}
-        disabled={habit.isArchived}
+        style={{ borderColor: "var(--border-soft)" }}
       >
-        {completed ? <Check className="h-4 w-4" strokeWidth={3} /> : <IconComp className="h-4 w-4 text-[var(--fg-muted)]" />}
-      </button>
-
-      <div className="flex-1 min-w-0">
-        <p
+        <button
+          onClick={() => onToggle(habit.id, date)}
           className={cn(
-            "font-serif text-[15px] leading-snug",
-            completed ? "text-[var(--fg-muted)] line-through" : "",
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition-all",
+            completed ? `${colors.bg} text-cream-50` : "border-2 border-dashed border-[var(--fg-muted)]/40 hover:border-[var(--accent)]",
           )}
-          style={{ color: completed ? undefined : "var(--fg)" }}
+          aria-label={completed ? "Unmark" : "Mark complete"}
+          disabled={habit.isArchived}
         >
-          {habit.title}
-        </p>
-        {habit.description && (
-          <p className="mt-0.5 text-xs text-[var(--fg-soft)] line-clamp-1">{habit.description}</p>
-        )}
-        {habit.notes && (
-          <p className="mt-0.5 text-[10.5px] italic text-[var(--accent)] line-clamp-1">“{habit.notes}”</p>
-        )}
-      </div>
+          {completed ? <Check className="h-4 w-4" strokeWidth={3} /> : <IconComp className="h-4 w-4 text-[var(--fg-muted)]" />}
+        </button>
 
-      <div className="hidden sm:flex items-center gap-3 mr-2">
-        <div className="flex items-center gap-1 text-xs">
-          <Flame className={cn("h-3.5 w-3.5", current > 0 ? "text-burgundy-300" : "text-[var(--fg-muted)]")} />
-          <span className={cn("font-medium", current > 0 ? "text-burgundy-400" : "text-[var(--fg-muted)]")}>
-            {current}
-          </span>
+        <div className="flex-1 min-w-0">
+          <p
+            className={cn(
+              "font-serif text-[15px] leading-snug",
+              completed ? "text-[var(--fg-muted)] line-through" : "",
+            )}
+            style={{ color: completed ? undefined : "var(--fg)" }}
+          >
+            {habit.title}
+          </p>
+          {habit.description && (
+            <p className="mt-0.5 text-xs text-[var(--fg-soft)] line-clamp-1">{habit.description}</p>
+          )}
+          {habit.notes && (
+            <p className="mt-0.5 text-[10.5px] italic text-[var(--accent)] line-clamp-1">&ldquo;{habit.notes}&rdquo;</p>
+          )}
         </div>
-        {best > 0 && (
-          <span className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">best {best}</span>
-        )}
-      </div>
 
-      <div className="flex shrink-0 items-center gap-1 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={() => onEdit(habit)}
-          className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-cream-200 dark:hover:bg-ink-400"
-          aria-label="Edit habit"
-        >
-          <Pencil className="h-3.5 w-3.5" />
-        </button>
-        <button
-          onClick={() => updateHabit(habit.id, { isArchived: !habit.isArchived })}
-          className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-cream-200 dark:hover:bg-ink-400"
-          aria-label={habit.isArchived ? "Restore habit" : "Archive habit"}
-        >
-          {habit.isArchived ? <ArchiveRestore className="h-3.5 w-3.5 text-sage-500" /> : <Archive className="h-3.5 w-3.5" />}
-        </button>
-        <button
-          onClick={() => {
-            if (confirm("Delete this habit and all its history?")) onDelete(habit.id);
-          }}
-          className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-burgundy-50 hover:text-burgundy-400"
-          aria-label="Delete habit"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
+        <div className="hidden sm:flex items-center gap-3 mr-2">
+          <div className="flex items-center gap-1 text-xs">
+            <Flame className={cn("h-3.5 w-3.5", current > 0 ? "text-burgundy-300" : "text-[var(--fg-muted)]")} />
+            <span className={cn("font-medium", current > 0 ? "text-burgundy-400" : "text-[var(--fg-muted)]")}>
+              {current}
+            </span>
+          </div>
+          {best > 0 && (
+            <span className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">best {best}</span>
+          )}
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={() => onEdit(habit)}
+            className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-cream-200 dark:hover:bg-ink-400"
+            aria-label="Edit habit"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => updateHabit(habit.id, { isArchived: !habit.isArchived })}
+            className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-cream-200 dark:hover:bg-ink-400"
+            aria-label={habit.isArchived ? "Restore habit" : "Archive habit"}
+          >
+            {habit.isArchived ? <ArchiveRestore className="h-3.5 w-3.5 text-sage-500" /> : <Archive className="h-3.5 w-3.5" />}
+          </button>
+          <button
+            onClick={() => {
+              if (confirm("Delete this habit and all its history?")) onDelete(habit.id);
+            }}
+            className="rounded p-1.5 text-[var(--fg-soft)] hover:bg-burgundy-50 hover:text-burgundy-400"
+            aria-label="Delete habit"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
-    </div>
+    </SwipeableItem>
   );
 }
