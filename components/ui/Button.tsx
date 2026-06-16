@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
+import { motion } from "framer-motion";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
@@ -27,11 +28,11 @@ const sizeClasses: Record<Size, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = "secondary", size = "md", type = "button", ...rest },
+  { className, variant = "secondary", size = "md", type = "button", disabled, ...rest },
   ref,
 ) {
   return (
-    <button
+    <motion.button
       ref={ref}
       type={type}
       className={cn(
@@ -42,7 +43,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         sizeClasses[size],
         className,
       )}
-      {...rest}
+      whileTap={disabled ? undefined : { scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      {...(rest as any)}
     />
   );
 });
