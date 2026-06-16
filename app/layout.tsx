@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { LazyMotion, domAnimation } from "framer-motion";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { DataProvider } from "@/components/providers/DataProvider";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { AppShell } from "@/components/layout/AppShell";
+import { KeyboardShortcuts } from "@/components/motion";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -135,15 +137,18 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <AuthProvider>
-          <DataProvider>
-            <ThemeProvider>
-              <RequireAuth>
-                {children}
-              </RequireAuth>
-            </ThemeProvider>
-          </DataProvider>
-        </AuthProvider>
+        <LazyMotion features={domAnimation}>
+          <AuthProvider>
+            <DataProvider>
+              <KeyboardShortcuts />
+              <ThemeProvider>
+                <RequireAuth>
+                  {children}
+                </RequireAuth>
+              </ThemeProvider>
+            </DataProvider>
+          </AuthProvider>
+        </LazyMotion>
       </body>
     </html>
   );
