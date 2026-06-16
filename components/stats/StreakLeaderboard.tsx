@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { Flame } from "lucide-react";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { useData } from "@/components/providers/DataProvider";
 import { computeStreak } from "@/lib/habitUtils";
@@ -38,7 +39,15 @@ export function StreakLeaderboard() {
                   <p className="text-sm truncate">{habit.title}</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium tnum">{current}</div>
+                  <motion.div
+                    className="text-sm font-medium tnum"
+                    key={current}
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    {current}
+                  </motion.div>
                   {best > 0 && (
                     <div className="text-[10px] text-[var(--fg-muted)] tnum">best {best}</div>
                   )}

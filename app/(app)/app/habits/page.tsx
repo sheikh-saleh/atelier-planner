@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { HabitList } from "@/components/habits/HabitList";
 import { StreakLeaderboard } from "@/components/stats/StreakLeaderboard";
 import { AnimatedPage } from "@/components/motion";
 
 export default function HabitsPage() {
+  useEffect(() => {
+    const handleNewHabit = () => {
+      document.dispatchEvent(new CustomEvent("atelier:open-new-habit"));
+    };
+    window.addEventListener("atelier:new-habit", handleNewHabit);
+    return () => window.removeEventListener("atelier:new-habit", handleNewHabit);
+  }, []);
+
   return (
     <AnimatedPage>
       <div className="space-y-6 sm:space-y-8">

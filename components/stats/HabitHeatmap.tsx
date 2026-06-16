@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { addDays, format, startOfDay } from "date-fns";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { useData } from "@/components/providers/DataProvider";
 import { isHabitCompletedOn, isHabitScheduledOn } from "@/lib/habitUtils";
@@ -29,7 +30,7 @@ export function HabitHeatmap() {
         </div>
       </div>
       <div className="grid grid-cols-7 gap-1.5">
-        {grid.map(({ d, rate }) => {
+        {grid.map(({ d, rate }, index) => {
           let bg = "var(--border-soft)";
           if (rate === -1) bg = "transparent";
           else if (rate === 0) bg = "var(--bg-soft)";
@@ -39,11 +40,14 @@ export function HabitHeatmap() {
           else bg = "var(--sage-500)";
 
           return (
-            <div
+            <motion.div
               key={d.toISOString()}
               className="aspect-square rounded"
               style={{ backgroundColor: bg }}
               title={format(d, "MMM d")}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.01, duration: 0.3 }}
             />
           );
         })}

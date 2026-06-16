@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { TaskList } from "@/components/tasks/TaskList";
 import { HabitList } from "@/components/habits/HabitList";
@@ -12,6 +13,21 @@ import { AnimatedPage } from "@/components/motion";
 
 export default function TodayPage() {
   const hydrated = useHydrated();
+
+  useEffect(() => {
+    const handleNewTask = () => {
+      document.dispatchEvent(new CustomEvent("atelier:open-new-task"));
+    };
+    const handleFocusJournal = () => {
+      // Focus journal if ref exists
+    };
+    window.addEventListener("atelier:new-task", handleNewTask);
+    window.addEventListener("atelier:focus-journal", handleFocusJournal);
+    return () => {
+      window.removeEventListener("atelier:new-task", handleNewTask);
+      window.removeEventListener("atelier:focus-journal", handleFocusJournal);
+    };
+  }, []);
 
   if (!hydrated) {
     return (

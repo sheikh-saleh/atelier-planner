@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Calendar, CheckSquare, Home, LineChart, PenLine, Settings as SettingsIcon, Timer, User, Lightbulb } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
@@ -51,7 +52,13 @@ export function Sidebar() {
               >
                 <Icon className={cn("h-4 w-4", active ? "text-[var(--accent)]" : "")} strokeWidth={1.5} />
                 <span className="font-serif tracking-wide">{item.label}</span>
-                {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />}
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
               </Link>
             );
           })}
