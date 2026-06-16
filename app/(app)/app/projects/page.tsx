@@ -13,6 +13,7 @@ import { Sparkles, Save, Plus, Trash2, Clock, FileText } from "lucide-react";
 import { generateBrief, saveBrief as serverSave, getBriefs as serverGet, deleteBrief as serverDelete } from "./actions";
 import { getLocalBriefs, saveLocalBrief, deleteLocalBrief } from "@/lib/planner-store";
 import { useHydrated } from "@/hooks/useHydrated";
+import { AnimatedPage } from "@/components/motion";
 
 const EMPTY_CONTENT: ProjectBriefContent = {
   summary: "",
@@ -154,15 +155,18 @@ export default function ProjectsPage() {
 
   if (!hydrated) {
     return (
-      <div className="space-y-4">
-        <Header title="Projects" />
-        <div className="h-32 rounded-xl bg-cream-200 dark:bg-ink-400 animate-pulse" />
-      </div>
+      <AnimatedPage>
+        <div className="space-y-4">
+          <Header title="Projects" />
+          <div className="h-32 rounded-xl bg-cream-200 dark:bg-ink-400 animate-pulse" />
+        </div>
+      </AnimatedPage>
     );
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <AnimatedPage>
+      <div className="space-y-6 sm:space-y-8">
       <Header
         title="Projects"
         subtitle="Describe your idea. Get a structured brief. Build with clarity."
@@ -288,6 +292,7 @@ export default function ProjectsPage() {
           </div>
         </Card>
       )}
-    </div>
+      </div>
+    </AnimatedPage>
   );
 }
