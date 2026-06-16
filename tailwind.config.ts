@@ -66,14 +66,6 @@ const config: Config = {
           300: "#9B5E55",
           400: "#6E3F38",
         },
-        sepia: {
-          50: "#FAF7F0",
-          100: "#F5F0E6",
-          200: "#EDE7D8",
-          300: "#D8D0C2",
-          400: "#A89E8C",
-          500: "#706858",
-        },
       },
       boxShadow: {
         soft: "0 1px 2px rgba(var(--shadow) / 0.04), 0 4px 12px rgba(var(--shadow) / 0.06)",

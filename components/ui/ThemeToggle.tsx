@@ -23,8 +23,6 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       aria-label={
         mounted
           ? theme === "dark"
-            ? "Switch to sepia"
-            : theme === "sepia"
             ? "Switch to light"
             : "Switch to dark"
           : "Toggle theme"

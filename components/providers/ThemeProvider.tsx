@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useData } from "./DataProvider";
 
-type Theme = "light" | "dark" | "sepia";
+type Theme = "light" | "dark";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -28,13 +28,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     const root = document.documentElement;
-    root.classList.remove("dark", "sepia");
+    root.classList.remove("dark");
     if (theme === "dark") root.classList.add("dark");
-    else if (theme === "sepia") root.classList.add("sepia");
   }, [theme, hydrated]);
 
   const toggleTheme = useCallback(() => {
-    const next = theme === "light" ? "dark" : theme === "dark" ? "sepia" : "light";
+    const next = theme === "light" ? "dark" : "light";
     setSettings({ theme: next });
   }, [theme, setSettings]);
 

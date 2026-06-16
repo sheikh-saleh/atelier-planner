@@ -108,9 +108,8 @@ const themeScript = `
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       theme = 'dark';
     }
-    document.documentElement.classList.remove('dark', 'sepia');
+    document.documentElement.classList.remove('dark');
     if (theme === 'dark') document.documentElement.classList.add('dark');
-    else if (theme === 'sepia') document.documentElement.classList.add('sepia');
   } catch (e) {}
 })();
 `;

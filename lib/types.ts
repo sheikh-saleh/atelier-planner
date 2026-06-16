@@ -60,7 +60,7 @@ export interface PomodoroConfig {
 export type JournalMoodUpdate = JournalEntry["mood"] | "clear";
 
 export interface Settings {
-  theme: "light" | "dark" | "sepia";
+  theme: "light" | "dark";
   notificationsEnabled: boolean;
   soundEnabled: boolean;
   pomodoro: PomodoroConfig;

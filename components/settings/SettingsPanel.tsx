@@ -115,7 +115,7 @@ export function SettingsPanel() {
               <div className="text-xs text-[var(--fg-soft)]">Choose your interface theme</div>
             </div>
             <div className="flex rounded-md border p-0.5" style={{ borderColor: "var(--border-soft)" }}>
-              {(["light", "dark", "sepia"] as const).map((t) => (
+              {(["light", "dark"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTheme(t)}
