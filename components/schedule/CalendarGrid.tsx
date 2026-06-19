@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import type { Task } from "@/lib/types";
+import type { Category, Task } from "@/lib/types";
 import {
   startOfMonth,
   endOfMonth,
@@ -28,7 +28,7 @@ interface CalendarGridProps {
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const categoryDots: Record<string, string> = {
+const categoryDots: Record<Category, string> = {
   work: "bg-blue-dusty-300",
   personal: "bg-sage-300",
   health: "bg-burgundy-300",
@@ -45,14 +45,13 @@ export function CalendarGrid({
   onPrevMonth,
   onNextMonth,
 }: CalendarGridProps) {
-  const monthDate = new Date(year, month, 1);
+  const monthDate = useMemo(() => new Date(year, month, 1), [year, month]);
 
   const days = useMemo(() => {
-    const monthDate = new Date(year, month, 1);
     const start = startOfWeek(startOfMonth(monthDate));
     const end = endOfWeek(endOfMonth(monthDate));
     return eachDayOfInterval({ start, end });
-  }, [year, month]);
+  }, [monthDate]);
 
   const tasksByDate = useMemo(() => {
     const map: Record<string, Task[]> = {};
