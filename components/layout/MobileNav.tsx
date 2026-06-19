@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CheckSquare, Home, LineChart, Lightbulb, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
+import { Calendar, CheckSquare, Home, LineChart, Lightbulb, PenLine, Settings as SettingsIcon, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 const items = [
   { href: "/app", label: "Today", icon: Home },
+  { href: "/app/schedule", label: "Schedule", icon: Calendar },
   { href: "/app/projects", label: "Projects", icon: Lightbulb },
   { href: "/app/habits", label: "Habits", icon: CheckSquare },
   { href: "/app/timer", label: "Focus", icon: Timer },
